@@ -13,3 +13,5 @@
 #define BETWEEN(a, b, c) ((a >= b) && (a <= c))
 
 void delay(uint32_t ms);
+
+#define NO_IMPL { fprintf(stderr, "NOT YET IMPLEMENTED\n"); exit(-5); }

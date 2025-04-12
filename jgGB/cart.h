@@ -10,6 +10,10 @@ public:
     cart();
 	bool cart_load(char* cartfilename);
 
+    uint8_t cart_read(uint16_t address);
+    void cart_write(uint16_t address, uint8_t value);
+
+
 private:
 
     std::string cart_lic_name();

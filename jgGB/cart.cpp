@@ -132,3 +132,12 @@ bool cart::cart_load(char* cartfilename)
     return true;
 
 }
+
+uint8_t cart::cart_read(uint16_t address)
+{
+    return this->rom_data[address];
+}
+void cart::cart_write(uint16_t address, uint8_t value)
+{
+    NO_IMPL
+}
