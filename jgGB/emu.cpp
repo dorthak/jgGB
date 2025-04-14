@@ -32,19 +32,22 @@ bool emu::is_running()
 
 int emu::emu_run(int argc, char** argv)
 {
-	cart c = cart();
-	cpu cp = cpu();
 	if (argc < 2)
 	{
 		std::cout << "Usage: emu <rom_file>" << std::endl;
 		return -1;
 	}
+	cart c = cart(argv[1]);
 
-	if (!(c.cart_load(argv[1])))
+	if (!(c.cart_loaded()))
 	{
 		printf("Failed to load ROM file: %s\n", argv[1]);
 		return -2;
 	}
+	bus b = bus();
+	b.set_cart(&c);
+
+	cpu cp = cpu(&b, this);
 
 	printf("Cart loaded..\n");
 
@@ -52,8 +55,6 @@ int emu::emu_run(int argc, char** argv)
 	printf("SDL INIT\n");
 	TTF_Init();
 	printf("TTF INIT\n");
-
-	cp.cpu_init();
 
 	this->running = true;
 	this->paused = false;
@@ -76,4 +77,9 @@ int emu::emu_run(int argc, char** argv)
 	}
 	
 	return 0;
+}
+
+void emu::emu_cycles(int cpu_cycles)
+{
+	//TODO
 }

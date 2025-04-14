@@ -12,3 +12,38 @@
 // 0xFEA0 - 0xFEFF : Reserved - Unusable
 // 0xFF00 - 0xFF7F : I/O Registers
 // 0xFF80 - 0xFFFE : Zero Page
+
+uint8_t bus::bus_read(uint16_t address)
+{
+	if (this->crt == 0)
+	{
+		std::cout << "ERROR: Cart not connected to bus." << std::endl;
+		return 0;
+	}
+
+	if (address < 0x8000)
+	{
+		return this->crt->cart_read(address);
+	}
+
+	NO_IMPL
+		return 0;
+
+}
+void bus::bus_write(uint16_t address, uint8_t value)
+{
+	if (this->crt == 0)
+	{
+		std::cout << "ERROR: Cart not connected to bus." << std::endl;
+
+	}
+	if (address < 0x8000)
+	{
+		this->crt->cart_write(address, value);
+	}
+}
+
+void bus::set_cart(cart* crt)
+{
+	this->crt = crt;
+}

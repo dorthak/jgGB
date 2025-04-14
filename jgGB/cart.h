@@ -1,23 +1,28 @@
 #pragma once
 #include "common.h"
-#include <array>
+
 
 
 class cart
 {
 
 public:
-    cart();
-	bool cart_load(char* cartfilename);
+//    cart();
+    cart(char* cartfilename);
+    bool cart_loaded();
+//    bool cart_load(char* cartfilename);
 
     uint8_t cart_read(uint16_t address);
     void cart_write(uint16_t address, uint8_t value);
 
 
 private:
+    bool cartloaded = false;
 
     std::string cart_lic_name();
     std::string cart_type_name();
+
+    void init_lic_code();
 
 
     typedef struct {

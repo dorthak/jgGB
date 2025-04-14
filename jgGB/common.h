@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+#include <array>
 
 
 #define BIT(a, n) ((a & (1 << n)) ? 1 : 0)
@@ -14,4 +15,4 @@
 
 void delay(uint32_t ms);
 
-#define NO_IMPL { fprintf(stderr, "NOT YET IMPLEMENTED\n"); exit(-5); }
+#define NO_IMPL { fprintf(stderr, "NOT YET IMPLEMENTED\n"); exit(-5); };

@@ -1,5 +1,5 @@
 #pragma once
-#include "common.h"\
+#include "common.h"
 
 
 class emu
@@ -12,6 +12,7 @@ public:
 	bool is_paused();
 	bool is_running();
 	
+	void emu_cycles(int cpu_cycles);
 
 private:
 
