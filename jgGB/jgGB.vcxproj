@@ -158,9 +158,11 @@
     <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="amodefunc.cpp" />
     <ClCompile Include="bus.cpp" />
     <ClCompile Include="cart.cpp" />
     <ClCompile Include="cpu.cpp" />
+    <ClCompile Include="cpuproc.cpp" />
     <ClCompile Include="emu.cpp" />
     <ClCompile Include="instruction.cpp" />
     <ClCompile Include="ppu.cpp" />

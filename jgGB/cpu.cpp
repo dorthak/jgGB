@@ -1,6 +1,5 @@
 #include "common.h"
 #include "cpu.h"
-#include "instruction.h"
 
 
 cpu::cpu(bus* b, emu* e)
@@ -17,45 +16,90 @@ cpu::~cpu()
 }
 
 bool cpu::cpu_step() {
-    printf("Cpu not yet implemented.\n");
-    return false;
+    if (!(this->halted))
+    {
+        uint16_t pc = this->regs.PC;
+
+        fetch_instruction();
+        fetch_data();
+
+        printf("%04X: %-7s (%02X %02X %02X) A: %02X B: %02X C: %02X\n", 
+            pc, this->inst_name(this->type).c_str(), this->cur_opcode,
+            b->bus_read(pc + 1), b->bus_read(pc + 2), this->regs.A, this->regs.B, this->regs.C);
+
+        if (this->inst == NULL)
+        {
+            printf("Unknown Instruction! %02X\n", this->cur_opcode);
+            exit(-7);
+        }
+        execute();
+    }
+
+    return true;
 }
 
 
 void cpu::fetch_instruction()
 {
-    //memory clear
-    if (this->cur_inst != 0)
-    {
-        delete this->cur_inst;
-    }
-    this->cur_opcode = this->b->bus_read(this->regs.PC);
     
-    this->cur_inst =  new instruction(this->cur_opcode);
-}
+    this->type = instdata::IN_NONE;
+	this->mode = instdata::AM_IMP;
+	this->reg_1 = instdata::RT_NONE;
+	this->reg_2 = instdata::RT_NONE;
+	this->cond = instdata::CT_NONE;
+	this->param = 0;
+    this->a_mode = NULL;
+    this->inst = NULL;
 
+
+    this->cur_opcode = this->b->bus_read(this->regs.PC++);
+
+    
+    switch (this->cur_opcode)
+    {
+    case 0x00:
+        this->type = instdata::IN_NOP; this->inst = &cpu::fIN_NOP; this->mode = instdata::AM_IMP; this->a_mode = &cpu::fAM_IMP; break;
+    case 0x05:
+        this->type = instdata::IN_DEC; this->inst = &cpu::fIN_DEC; this->mode = instdata::AM_R; this->a_mode = &cpu::fAM_R;this->reg_1 = instdata::RT_B; break;
+    case 0x0E:
+        this->type = instdata::IN_LD; this->inst = &cpu::fIN_LD; this->mode = instdata::AM_R_D8; this->a_mode = &cpu::fAM_R_D8; this->reg_1 = instdata::RT_C; break;
+    case 0xAF:
+        this->type = instdata::IN_XOR; this->inst = &cpu::fIN_XOR; this->mode = instdata::AM_R; this->a_mode = &cpu::fAM_R; this->reg_1 = instdata::RT_A; break;
+    case 0xC3:
+        this->type = instdata::IN_JP; this->inst = &cpu::fIN_JP; this->mode = instdata::AM_D16; this->a_mode = &cpu::fAM_D16; break;
+    case 0xF3:
+        this->type = instdata::IN_DI; this->inst = &cpu::fIN_DI; break;
+
+    default:
+        this->type = instdata::IN_NONE; this->inst = &cpu::fIN_NONE; break;
+    }
+}
 
 void cpu::fetch_data()
 {
     this->mem_dest = 0;
     this->dest_is_mem = false;
 
-    if (this->cur_inst == 0)
+    if (this->cur_opcode == 0)
     {
         return;
     }
-    if (this->cur_inst->a_mode == NULL)
+    if (this->a_mode == NULL)
     {
         std::cout << "Unknown Addreessing Mode! " << this->cur_opcode << std::endl;
         return;
     }
-    this->cur_inst->a_mode(this, this->cur_inst);
+    (this->*a_mode)();
 }
 void cpu::execute()
 {
+    if (this->inst == NULL)
+    {
+        NO_IMPL
+    }
+    (this->*inst)();
 
 }
-
 
 uint16_t cpu::cpu_read_reg(instdata::reg_type rt)
 {
@@ -82,30 +126,47 @@ uint16_t cpu::cpu_read_reg(instdata::reg_type rt)
     }
 }
 
-void cpu::fAM_IMP(cpu* c, instruction* inst)
+std::string cpu::inst_name(instdata::in_type t)
 {
-    //Nada
+    return cpu::inst_lookup[t];
 }
-void cpu::fAM_R(cpu* c, instruction* inst)
+
+
+void cpu::set_flags(char z, char n, char h, char c)
 {
-    c->fetched_data = c->cpu_read_reg(inst->reg_1);
+    if (z != -1)
+    {
+        BIT_SET(this->regs.Fr, 7, z);
+    }
+    if (n != -1)
+    {
+        BIT_SET(this->regs.Fr, 6, n);
+    }
+    if (h != -1)
+    {
+        BIT_SET(this->regs.Fr, 5, h);
+    }
+    if (c != -1)
+    {
+        BIT_SET(this->regs.Fr, 4, c);
+    }
 }
-void cpu::fAM_R_D8(cpu* c, instruction* inst)
+
+bool cpu::check_cond()
 {
-    c->fetched_data = c->b->bus_read(c->regs.PC);
-    c->e->emu_cycles(1);
-    c->regs.PC++;
+    bool z = CPU_FLAG_Z;
+    bool c = CPU_FLAG_C;
 
-}
-void cpu::fAM_D16(cpu* c, instruction* inst)
-{
-    uint16_t lo = c->b->bus_read(c->regs.PC);
-    c->e->emu_cycles(1);
-
-    uint16_t hi = c->b->bus_read(c->regs.PC + 1);
-    c->e->emu_cycles(1);
-
-    c->fetched_data = lo | (hi << 8);
-
-    c->regs.PC += 2;
+    switch (this->cond)
+    {
+        case instdata::CT_NONE: return true;
+        case instdata::CT_C: return c;
+        case instdata::CT_NC: return !c;
+        case instdata::CT_Z: return z;
+        case instdata::CT_NZ: return !z;
+        default:
+            std::cout << "Invalid Condition!" << std::endl;
+            exit(-8);
+            break;
+    }
 }

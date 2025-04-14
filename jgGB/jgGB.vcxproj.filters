@@ -68,5 +68,11 @@
     <ClCompile Include="instdata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="amodefunc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cpuproc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
