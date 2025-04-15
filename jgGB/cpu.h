@@ -42,6 +42,25 @@ private:
 	void fAM_R();
 	void fAM_R_D8();
 	void fAM_D16();
+	
+	void fAM_R_D16();
+	void fAM_R_R();
+	void fAM_MR_R();
+	void fAM_R_MR();
+	void fAM_R_HLI();
+	void fAM_R_HLD();
+	void fAM_HLI_R();
+	void fAM_HLD_R();
+	void fAM_R_A8();
+	void fAM_A8_R();
+	void fAM_HL_SPR();
+	void fAM_D8();
+	void fAM_D16_R();
+	void fAM_MR_D8();
+	void fAM_MR();
+	void fAM_A16_R();
+	void fAM_R_A16();
+
 
 	//Operational functions
 	void fIN_NONE();

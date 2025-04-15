@@ -29,3 +29,21 @@ void cpu::fAM_D16()
 
     this->regs.PC += 2;
 }
+
+void cpu::fAM_R_D16(){ }
+void cpu::fAM_R_R(){ }
+void cpu::fAM_MR_R(){ }
+void cpu::fAM_R_MR(){ }
+void cpu::fAM_R_HLI(){ }
+void cpu::fAM_R_HLD(){ }
+void cpu::fAM_HLI_R(){ }
+void cpu::fAM_HLD_R(){ }
+void cpu::fAM_R_A8(){ }
+void cpu::fAM_A8_R(){ }
+void cpu::fAM_HL_SPR(){ }
+void cpu::fAM_D8(){ }
+void cpu::fAM_D16_R(){ }
+void cpu::fAM_MR_D8(){ }
+void cpu::fAM_MR(){ }
+void cpu::fAM_A16_R(){ }
+void cpu::fAM_R_A16(){ }

@@ -13,6 +13,11 @@
 // 0xFF00 - 0xFF7F : I/O Registers
 // 0xFF80 - 0xFFFE : Zero Page
 
+bus::bus()
+{
+
+}
+
 uint8_t bus::bus_read(uint16_t address)
 {
 	if (this->crt == 0)

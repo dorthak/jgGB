@@ -1,13 +1,13 @@
 #include "cart.h"
 
-//cart::cart()
-//{
-//    init_lic_code();
-//}
-
-cart::cart(char* cartfilename)
+cart::cart()
 {
     init_lic_code();
+}
+
+bool cart::cart_load(char* cartfilename)
+{
+   
 
     snprintf(this->filename, sizeof(this->filename), "%s", cartfilename);
 
@@ -19,7 +19,7 @@ cart::cart(char* cartfilename)
     if (err)
     {
         std::cout << "Failed to open: " << cartfilename << std::endl;
-        cartloaded = false;
+        this->cartloaded = false;
     }
     else
     {
@@ -45,9 +45,10 @@ cart::cart(char* cartfilename)
         printf("\t ROM Vers : %2.2X\n", this->header->version);
 
 
-        cartloaded = true;
+        this->cartloaded = true;
     }
 
+    return this->cartloaded;
 
 }
 

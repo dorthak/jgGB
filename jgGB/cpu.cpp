@@ -21,11 +21,13 @@ bool cpu::cpu_step() {
         uint16_t pc = this->regs.PC;
 
         fetch_instruction();
-        fetch_data();
+
 
         printf("%04X: %-7s (%02X %02X %02X) A: %02X B: %02X C: %02X\n", 
             pc, this->inst_name(this->type).c_str(), this->cur_opcode,
             b->bus_read(pc + 1), b->bus_read(pc + 2), this->regs.A, this->regs.B, this->regs.C);
+
+        fetch_data();
 
         if (this->inst == NULL)
         {
@@ -58,20 +60,21 @@ void cpu::fetch_instruction()
     switch (this->cur_opcode)
     {
     case 0x00:
-        this->type = instdata::IN_NOP; this->inst = &cpu::fIN_NOP; this->mode = instdata::AM_IMP; this->a_mode = &cpu::fAM_IMP; break;
+        this->type = instdata::IN_NOP;  this->inst = &cpu::fIN_NOP;     this->mode = instdata::AM_IMP;  this->a_mode = &cpu::fAM_IMP;   break;
     case 0x05:
-        this->type = instdata::IN_DEC; this->inst = &cpu::fIN_DEC; this->mode = instdata::AM_R; this->a_mode = &cpu::fAM_R;this->reg_1 = instdata::RT_B; break;
+        this->type = instdata::IN_DEC;  this->inst = &cpu::fIN_DEC;     this->mode = instdata::AM_R;    this->a_mode = &cpu::fAM_R;     this->reg_1 = instdata::RT_B; break;
     case 0x0E:
-        this->type = instdata::IN_LD; this->inst = &cpu::fIN_LD; this->mode = instdata::AM_R_D8; this->a_mode = &cpu::fAM_R_D8; this->reg_1 = instdata::RT_C; break;
+        this->type = instdata::IN_LD;   this->inst = &cpu::fIN_LD;      this->mode = instdata::AM_R_D8; this->a_mode = &cpu::fAM_R_D8;  this->reg_1 = instdata::RT_C; break;
     case 0xAF:
-        this->type = instdata::IN_XOR; this->inst = &cpu::fIN_XOR; this->mode = instdata::AM_R; this->a_mode = &cpu::fAM_R; this->reg_1 = instdata::RT_A; break;
+        this->type = instdata::IN_XOR;  this->inst = &cpu::fIN_XOR;     this->mode = instdata::AM_R;    this->a_mode = &cpu::fAM_R;     this->reg_1 = instdata::RT_A; break;
     case 0xC3:
-        this->type = instdata::IN_JP; this->inst = &cpu::fIN_JP; this->mode = instdata::AM_D16; this->a_mode = &cpu::fAM_D16; break;
+        this->type = instdata::IN_JP;   this->inst = &cpu::fIN_JP;      this->mode = instdata::AM_D16;  this->a_mode = &cpu::fAM_D16;   break;
     case 0xF3:
-        this->type = instdata::IN_DI; this->inst = &cpu::fIN_DI; break;
-
+        this->type = instdata::IN_DI;   this->inst = &cpu::fIN_DI;      this->mode = instdata::AM_IMP;  this->a_mode = &cpu::fAM_IMP;   break;
+    case 0x31:
+        this->type = instdata::IN_LD;   this->inst = &cpu::fIN_LD;      this->mode = instdata::AM_D16;  this->a_mode = &cpu::fAM_D16;  this->reg_1 = instdata::RT_SP; break;
     default:
-        this->type = instdata::IN_NONE; this->inst = &cpu::fIN_NONE; break;
+        this->type = instdata::IN_NONE; this->inst = &cpu::fIN_NONE;    break;
     }
 }
 

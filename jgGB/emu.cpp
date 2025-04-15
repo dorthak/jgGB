@@ -1,6 +1,5 @@
 #include "common.h"
 #include "emu.h"
-#include "cart.h"
 #include "cpu.h"
 
 #include <SDL3/SDL.h>
@@ -18,6 +17,18 @@ emu::emu()
 	this->paused = false;
 	this->running = false;
 	this->ticks = 0;
+
+	this->b = new bus();
+	this->crt = new cart();
+	this->c = new cpu(this->b, this);
+}
+
+emu::~emu()
+{
+	delete(this->c);
+	delete(this->crt);
+	delete(this->b);
+
 }
 
 bool emu::is_paused()
@@ -37,17 +48,17 @@ int emu::emu_run(int argc, char** argv)
 		std::cout << "Usage: emu <rom_file>" << std::endl;
 		return -1;
 	}
-	cart c = cart(argv[1]);
+	this->crt->cart_load(argv[1]);
 
-	if (!(c.cart_loaded()))
+	if (!(this->crt->cart_loaded()))
 	{
 		printf("Failed to load ROM file: %s\n", argv[1]);
 		return -2;
 	}
-	bus b = bus();
-	b.set_cart(&c);
+	
+	this->b->set_cart(this->crt);
 
-	cpu cp = cpu(&b, this);
+	
 
 	printf("Cart loaded..\n");
 
@@ -67,7 +78,7 @@ int emu::emu_run(int argc, char** argv)
 			continue;
 		}
 
-		if (!cp.cpu_step())
+		if (!this->c->cpu_step())
 		{
 			std::cout << "CPU Stopped" << std::endl;
 			return -3;

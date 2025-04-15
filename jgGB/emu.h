@@ -1,11 +1,16 @@
 #pragma once
 #include "common.h"
+#include "emu.h"
+#include "cart.h"
+#include "bus.h"
 
+class cpu;
 
 class emu
 {
 public:
 	emu();
+	~emu();
 
 	int emu_run(int argc, char** argv);
 
@@ -15,7 +20,10 @@ public:
 	void emu_cycles(int cpu_cycles);
 
 private:
-
+	bus *b;
+	cpu *c;
+	cart *crt;
+	
 	bool paused;
 	bool running;
 	uint64_t ticks;
