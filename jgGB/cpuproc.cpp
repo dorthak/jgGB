@@ -19,23 +19,7 @@ void cpu::fIN_DEC()
 {
     if (this->mode == instdata::AM_R)
     {
-        switch (this->reg_1)
-        {
-            case instdata::RT_A: this->regs.A = this->fetched_data - 1; break;
-            case instdata::RT_B: this->regs.B = this->fetched_data - 1; break;
-            case instdata::RT_C: this->regs.C = this->fetched_data - 1; break;
-            case instdata::RT_D: this->regs.D = this->fetched_data - 1; break;
-            case instdata::RT_E: this->regs.E = this->fetched_data - 1; break;
-            case instdata::RT_H: this->regs.H = this->fetched_data - 1; break;
-            case instdata::RT_L: this->regs.L = this->fetched_data - 1; break;
-            case instdata::RT_BC: this->regs.BC = this->fetched_data - 1; break;
-            case instdata::RT_DE: this->regs.DE = this->fetched_data - 1; break;
-            case instdata::RT_HL: this->regs.HL = this->fetched_data - 1; break;
-            case instdata::RT_SP: this->regs.SP = this->fetched_data - 1; break;
-            default: 
-                std::cout << "Invalid register for DEC instruction." << std::endl; exit(-9);
-
-        }
+        this->cpu_set_reg(this->reg_1, this->fetched_data - 1);
     }
     else 
     {

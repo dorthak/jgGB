@@ -31,8 +31,8 @@ uint8_t bus::bus_read(uint16_t address)
 		return this->crt->cart_read(address);
 	}
 
-	NO_IMPL
-		return 0;
+	//NO_IMPL
+	return 0;
 
 }
 void bus::bus_write(uint16_t address, uint8_t value)

@@ -27,14 +27,21 @@ bool cpu::cpu_step() {
             pc, this->inst_name(this->type).c_str(), this->cur_opcode,
             b->bus_read(pc + 1), b->bus_read(pc + 2), this->regs.A, this->regs.B, this->regs.C);
 
-        fetch_data();
+        if (!(fetch_data()))
+        {
+            return false;
+        }
 
         if (this->inst == NULL)
         {
             printf("Unknown Instruction! %02X\n", this->cur_opcode);
-            exit(-7);
+            return false;
         }
         execute();
+        if (!(execute()))
+        {
+            return false;
+        }
     }
 
     return true;
@@ -52,6 +59,7 @@ void cpu::fetch_instruction()
 	this->param = 0;
     this->a_mode = NULL;
     this->inst = NULL;
+   
 
 
     this->cur_opcode = this->b->bus_read(this->regs.PC++);
@@ -78,29 +86,31 @@ void cpu::fetch_instruction()
     }
 }
 
-void cpu::fetch_data()
+bool cpu::fetch_data()
 {
     this->mem_dest = 0;
     this->dest_is_mem = false;
 
     if (this->cur_opcode == 0)
     {
-        return;
+        return false;
     }
     if (this->a_mode == NULL)
     {
         std::cout << "Unknown Addreessing Mode! " << this->cur_opcode << std::endl;
-        return;
+        return false;
     }
     (this->*a_mode)();
+    return true;
 }
-void cpu::execute()
+bool cpu::execute()
 {
     if (this->inst == NULL)
     {
-        NO_IMPL
+        return false;
     }
     (this->*inst)();
+    return true;
 
 }
 
@@ -126,6 +136,30 @@ uint16_t cpu::cpu_read_reg(instdata::reg_type rt)
     case instdata::RT_SP: return this->regs.SP;
 
     default: return 0;
+    }
+}
+
+void cpu::cpu_set_reg(instdata::reg_type rt, uint16_t val)
+{
+    switch (rt)
+    {
+        case instdata::RT_A: this->regs.A = val & 0xFF; break;
+        case instdata::RT_F: this->regs.Fr = val & 0xFF; break;
+        case instdata::RT_B: this->regs.B = val & 0xFF; break;
+        case instdata::RT_C: this->regs.C = val & 0xFF; break;
+        case instdata::RT_D: this->regs.D = val & 0xFF; break;
+        case instdata::RT_E: this->regs.E = val & 0xFF; break;
+        case instdata::RT_H: this->regs.H = val & 0xFF; break;
+        case instdata::RT_L: this->regs.L = val & 0xFF; break;
+        case instdata::RT_BC: this->regs.BC = val; break;
+        case instdata::RT_DE: this->regs.DE = val; break;
+        case instdata::RT_HL: this->regs.HL = val; break;
+        case instdata::RT_SP: this->regs.SP = val; break;
+        case instdata::RT_AF: this->regs.SP = val; break;
+        case instdata::RT_PC: this->regs.SP = val; break;
+        case instdata::RT_NONE: break;
+        default:
+            std::cout << "Invalid register for DEC instruction." << std::endl; exit(-9); break;
     }
 }
 

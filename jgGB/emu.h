@@ -12,7 +12,8 @@ public:
 	emu();
 	~emu();
 
-	int emu_run(int argc, char** argv);
+	int emu_start(int argc, char** argv);
+	int emu_run();
 
 	bool is_paused();
 	bool is_running();

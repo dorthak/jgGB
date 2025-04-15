@@ -126,9 +126,11 @@ private:
 	bool int_master_enabled = false;
 
 	uint16_t cpu_read_reg(instdata::reg_type rt);
+	void cpu_set_reg(instdata::reg_type rt, uint16_t val);
+
 	void fetch_instruction();
-	void fetch_data();
-	void execute();
+	bool fetch_data();
+	bool execute();
 	void set_flags(char z, char n, char h, char c);
 	bool check_cond();
 

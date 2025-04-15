@@ -40,8 +40,7 @@ bool emu::is_running()
 	return this->running;
 }
 
-
-int emu::emu_run(int argc, char** argv)
+int emu::emu_start(int argc, char** argv)
 {
 	if (argc < 2)
 	{
@@ -55,12 +54,16 @@ int emu::emu_run(int argc, char** argv)
 		printf("Failed to load ROM file: %s\n", argv[1]);
 		return -2;
 	}
-	
+
 	this->b->set_cart(this->crt);
 
-	
-
 	printf("Cart loaded..\n");
+	return 0;
+}
+
+int emu::emu_run()
+{
+
 
 	SDL_Init(SDL_INIT_VIDEO);
 	printf("SDL INIT\n");
