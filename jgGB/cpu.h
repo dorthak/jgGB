@@ -4,6 +4,8 @@
 #include "instdata.h"
 #include "emu.h"
 
+#define ILINE(a, b, c, d, e, g) this->type = instdata::##a ;  this->inst = &cpu::f##a;     this->mode = instdata::##b;  this->a_mode = &cpu::f##b; this->reg_1 = instdata::##c; this->reg_2 = instdata::##d;  this->cond = instdata::##e; this->param = g; break;
+
 //forward declare class to avoid loop
 
 class cpu

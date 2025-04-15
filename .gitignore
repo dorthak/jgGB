@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /tests/vcpkg_installed
+/jgGB/reg.cpp
+/jgGB/reg.h

@@ -65,24 +65,26 @@ void cpu::fetch_instruction()
     this->cur_opcode = this->b->bus_read(this->regs.PC++);
 
     
+    //         ILINE(Instruction, Addr Mode, Reg 1, Reg 2, Condition, Paramter)
+
     switch (this->cur_opcode)
     {
-    case 0x00:
-        this->type = instdata::IN_NOP;  this->inst = &cpu::fIN_NOP;     this->mode = instdata::AM_IMP;  this->a_mode = &cpu::fAM_IMP;   break;
-    case 0x05:
-        this->type = instdata::IN_DEC;  this->inst = &cpu::fIN_DEC;     this->mode = instdata::AM_R;    this->a_mode = &cpu::fAM_R;     this->reg_1 = instdata::RT_B; break;
-    case 0x0E:
-        this->type = instdata::IN_LD;   this->inst = &cpu::fIN_LD;      this->mode = instdata::AM_R_D8; this->a_mode = &cpu::fAM_R_D8;  this->reg_1 = instdata::RT_C; break;
-    case 0xAF:
-        this->type = instdata::IN_XOR;  this->inst = &cpu::fIN_XOR;     this->mode = instdata::AM_R;    this->a_mode = &cpu::fAM_R;     this->reg_1 = instdata::RT_A; break;
-    case 0xC3:
-        this->type = instdata::IN_JP;   this->inst = &cpu::fIN_JP;      this->mode = instdata::AM_D16;  this->a_mode = &cpu::fAM_D16;   break;
-    case 0xF3:
-        this->type = instdata::IN_DI;   this->inst = &cpu::fIN_DI;      this->mode = instdata::AM_IMP;  this->a_mode = &cpu::fAM_IMP;   break;
-    case 0x31:
-        this->type = instdata::IN_LD;   this->inst = &cpu::fIN_LD;      this->mode = instdata::AM_D16;  this->a_mode = &cpu::fAM_D16;  this->reg_1 = instdata::RT_SP; break;
-    default:
-        this->type = instdata::IN_NONE; this->inst = &cpu::fIN_NONE;    break;
+        //this->type = instdata::IN_NOP;  this->inst = &cpu::fIN_NOP;     this->mode = instdata::AM_IMP;  this->a_mode = &cpu::fAM_IMP;   break;
+        //this->type = instdata::IN_DEC;  this->inst = &cpu::fIN_DEC;     this->mode = instdata::AM_R;    this->a_mode = &cpu::fAM_R;     this->reg_1 = instdata::RT_B; break;
+        //this->type = instdata::IN_LD;   this->inst = &cpu::fIN_LD;      this->mode = instdata::AM_R_D8; this->a_mode = &cpu::fAM_R_D8;  this->reg_1 = instdata::RT_C; break;
+        //this->type = instdata::IN_XOR;  this->inst = &cpu::fIN_XOR;     this->mode = instdata::AM_R;    this->a_mode = &cpu::fAM_R;     this->reg_1 = instdata::RT_A; break;
+        //this->type = instdata::IN_JP;   this->inst = &cpu::fIN_JP;      this->mode = instdata::AM_D16;  this->a_mode = &cpu::fAM_D16;   break;
+        //this->type = instdata::IN_DI;   this->inst = &cpu::fIN_DI;      this->mode = instdata::AM_IMP;  this->a_mode = &cpu::fAM_IMP;   break;
+        //this->type = instdata::IN_LD;   this->inst = &cpu::fIN_LD;      this->mode = instdata::AM_D16;  this->a_mode = &cpu::fAM_D16;  this->reg_1 = instdata::RT_SP; break;
+        //this->type = instdata::IN_NONE; this->inst = &cpu::fIN_NONE;    break;
+    case 0x00: ILINE(IN_NOP,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE, 0)
+    case 0x05: ILINE(IN_DEC,    AM_R,       RT_B,       RT_NONE, CT_NONE, 0)
+    case 0x0E: ILINE(IN_LD,     AM_R_D8,    RT_C,       RT_NONE, CT_NONE, 0)
+    case 0xAF: ILINE(IN_XOR,    AM_R,       RT_A,       RT_NONE, CT_NONE, 0)
+    case 0xC3: ILINE(IN_JP,     AM_D16,     RT_NONE,    RT_NONE, CT_NONE, 0)
+    case 0xF3: ILINE(IN_DI,     AM_IMP,     RT_NONE,    RT_NONE, CT_NONE, 0)
+    case 0x31: ILINE(IN_LD,     AM_D16,     RT_SP,      RT_NONE, CT_NONE, 0)
+    default:   ILINE(IN_NONE,   AM_IMP,     RT_NONE,    RT_NONE, CT_NONE, 0)
     }
 }
 
@@ -91,10 +93,11 @@ bool cpu::fetch_data()
     this->mem_dest = 0;
     this->dest_is_mem = false;
 
-    if (this->cur_opcode == 0)
+/*    if (this->cur_opcode == 0)
     {
         return false;
     }
+*/
     if (this->a_mode == NULL)
     {
         std::cout << "Unknown Addreessing Mode! " << this->cur_opcode << std::endl;
