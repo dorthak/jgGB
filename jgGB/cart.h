@@ -8,6 +8,7 @@ class cart
 
 public:
     cart();
+    ~cart();
 //    cart(char* cartfilename);
     bool cart_loaded();
     bool cart_load(char* cartfilename);

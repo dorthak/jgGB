@@ -4,7 +4,7 @@
 #include "instdata.h"
 #include "emu.h"
 
-#define ILINE(a, b, c, d, e, g) this->type = instdata::##a ;  this->inst = &cpu::f##a;     this->mode = instdata::##b;  this->a_mode = &cpu::f##b; this->reg_1 = instdata::##c; this->reg_2 = instdata::##d;  this->cond = instdata::##e; this->param = g; break;
+#define ILINE(a, b, c, d, e, g) type = instdata::##a ;  inst = &cpu::f##a;     mode = instdata::##b;  a_mode = &cpu::f##b; reg_1 = instdata::##c; reg_2 = instdata::##d;  cond = instdata::##e; param = g; break;
 
 //forward declare class to avoid loop
 
@@ -31,13 +31,6 @@ private:
 	void (cpu::* a_mode)(void) = NULL;
 	void (cpu::*inst)(void) = NULL;
 
-
-
-
-	//void fAM_IMP(cpu* c, instruction* inst);
-	//void fAM_R(cpu* c, instruction* inst);
-	//void fAM_R_D8(cpu* c, instruction* inst);
-	//void fAM_D16(cpu* c, instruction* inst);
 
 	// Address mode functions
 	void fAM_IMP();
@@ -68,6 +61,7 @@ private:
 	void fIN_NONE();
 	void fIN_NOP();
 	void fIN_DEC();
+	void fIN_INC();
 	void fIN_LD();
 	void fIN_JP();
 	void fIN_DI();
@@ -83,14 +77,16 @@ private:
 		union
 		{
 			struct
-			{ uint8_t A; uint8_t Fr; };
+			{ 
+				uint8_t Fr; uint8_t A;
+			};
 			uint16_t AF;
 		};
 		union
 		{
 			struct
 			{
-				uint8_t B; uint8_t C;
+				uint8_t C; uint8_t B;
 			};
 			uint16_t BC;
 		};
@@ -98,7 +94,7 @@ private:
 		{
 			struct
 			{
-				uint8_t D; uint8_t E;
+				uint8_t E; uint8_t D;
 			};
 			uint16_t DE;
 		};
@@ -106,7 +102,7 @@ private:
 		{
 			struct
 			{
-				uint8_t H; uint8_t L;
+				uint8_t L; uint8_t H;
 			};
 			uint16_t HL;
 		};
@@ -133,7 +129,7 @@ private:
 	void fetch_instruction();
 	bool fetch_data();
 	bool execute();
-	void set_flags(char z, char n, char h, char c);
+	void cpu_set_flags(char z, char n, char h, char c);
 	bool check_cond();
 
 
@@ -195,6 +191,7 @@ private:
 
     std::string inst_name(instdata::in_type t);
 
+	static bool is_16_bit(instdata::reg_type rt);
 
 
 };

@@ -5,11 +5,17 @@ cart::cart()
     init_lic_code();
 }
 
+cart::~cart()
+{
+    free(rom_data);
+}
+
+
 bool cart::cart_load(char* cartfilename)
 {
    
 
-    snprintf(this->filename, sizeof(this->filename), "%s", cartfilename);
+    snprintf(filename, sizeof(filename), "%s", cartfilename);
 
     errno_t err;
     FILE* fp;
@@ -19,36 +25,36 @@ bool cart::cart_load(char* cartfilename)
     if (err)
     {
         std::cout << "Failed to open: " << cartfilename << std::endl;
-        this->cartloaded = false;
+        cartloaded = false;
     }
     else
     {
 
         fseek(fp, 0, SEEK_END);
-        this->rom_size = ftell(fp);
+        rom_size = ftell(fp);
 
         rewind(fp);
 
-        this->rom_data = (uint8_t*)malloc(this->rom_size);
-        fread(this->rom_data, this->rom_size, 1, fp);
+        rom_data = (uint8_t*)malloc(rom_size);
+        fread(rom_data, rom_size, 1, fp);
         fclose(fp);
 
-        this->header = (cart::rom_header*)(this->rom_data + 0x100);
-        this->header->title[15] = 0;
+        header = (cart::rom_header*)(rom_data + 0x100);
+        header->title[15] = 0;
 
         printf("Cartridge Loaded:\n");
-        printf("\t Title    : %s\n", this->header->title);
-        printf("\t Type     : %2.2X (%s)\n", this->header->type, cart_type_name().c_str());
-        printf("\t ROM Size : %d KB\n", 32 << this->header->rom_size);
-        printf("\t RAM Size : %2.2X\n", this->header->ram_size);
-        printf("\t LIC Code : %2.2X (%s)\n", this->header->lic_code, cart_lic_name().c_str());
-        printf("\t ROM Vers : %2.2X\n", this->header->version);
+        printf("\t Title    : %s\n", header->title);
+        printf("\t Type     : %2.2X (%s)\n", header->type, cart_type_name().c_str());
+        printf("\t ROM Size : %d KB\n", 32 << header->rom_size);
+        printf("\t RAM Size : %2.2X\n", header->ram_size);
+        printf("\t LIC Code : %2.2X (%s)\n", header->lic_code, cart_lic_name().c_str());
+        printf("\t ROM Vers : %2.2X\n", header->version);
 
 
-        this->cartloaded = true;
+        cartloaded = true;
     }
 
-    return this->cartloaded;
+    return cartloaded;
 
 }
 
@@ -126,9 +132,9 @@ void cart::init_lic_code()
 
 std::string cart::cart_lic_name()
 {
-    if (this->header->new_lic_code <= 0xA4)
+    if (header->new_lic_code <= 0xA4)
     {
-        return this->LIC_CODE[this->header->lic_code];
+        return LIC_CODE[header->lic_code];
     }
 
     return "UNKNOWN";
@@ -137,9 +143,9 @@ std::string cart::cart_lic_name()
 
 std::string cart::cart_type_name()
 {
-    if (this->header->type <= 0x22)
+    if (header->type <= 0x22)
     {
-        return this->ROM_TYPES[this->header->type];
+        return ROM_TYPES[header->type];
     }
     
     return "UNKNOWN";
@@ -147,7 +153,7 @@ std::string cart::cart_type_name()
 
 bool cart::cart_loaded()
 {
-    return this->cartloaded;
+    return cartloaded;
 }
 
 //bool cart::cart_load(char* cartfilename)
@@ -192,7 +198,7 @@ bool cart::cart_loaded()
 
 uint8_t cart::cart_read(uint16_t address)
 {
-    return this->rom_data[address];
+    return rom_data[address];
 }
 void cart::cart_write(uint16_t address, uint8_t value)
 {

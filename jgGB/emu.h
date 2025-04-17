@@ -19,6 +19,7 @@ public:
 	bool is_running();
 	
 	void emu_cycles(int cpu_cycles);
+	uint64_t get_ticks();
 
 private:
 	bus *b;

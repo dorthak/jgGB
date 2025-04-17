@@ -20,7 +20,7 @@ bus::bus()
 
 uint8_t bus::bus_read(uint16_t address)
 {
-	if (this->crt == 0)
+	if (crt == 0)
 	{
 		std::cout << "ERROR: Cart not connected to bus." << std::endl;
 		return 0;
@@ -28,7 +28,7 @@ uint8_t bus::bus_read(uint16_t address)
 
 	if (address < 0x8000)
 	{
-		return this->crt->cart_read(address);
+		return crt->cart_read(address);
 	}
 
 	//NO_IMPL
@@ -37,15 +37,22 @@ uint8_t bus::bus_read(uint16_t address)
 }
 void bus::bus_write(uint16_t address, uint8_t value)
 {
-	if (this->crt == 0)
+	if (crt == 0)
 	{
 		std::cout << "ERROR: Cart not connected to bus." << std::endl;
 
 	}
 	if (address < 0x8000)
 	{
-		this->crt->cart_write(address, value);
+		crt->cart_write(address, value);
 	}
+}
+
+void bus::bus_write16(uint16_t address, uint16_t value)
+{
+	bus_write(address + 1, (value >> 8) & 0xFF);
+	bus_write(address, value & 0xFF);
+
 }
 
 void bus::set_cart(cart* crt)

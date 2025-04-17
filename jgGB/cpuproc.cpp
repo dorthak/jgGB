@@ -5,7 +5,8 @@
 void cpu::fIN_NONE()
 {
     std::cout << "INVALID INSTRUCTION!" << std::endl;
-    exit(-7);
+    //exit(-7);
+    //NO_IMPL
 }
 void cpu::fIN_NOP()
 {
@@ -13,25 +14,69 @@ void cpu::fIN_NOP()
 }
 void cpu::fIN_LD()
 {
-    //TODO
+    if (dest_is_mem)
+    {
+        //LD (BC), A for example
+
+        if (is_16_bit(reg_2))
+        {
+            e->emu_cycles(1);
+            b->bus_write16(mem_dest, fetched_data);
+        } else {
+            b->bus_write(mem_dest, (uint8_t) fetched_data);
+        }
+
+        e->emu_cycles(1);
+        return;
+    }
+
+    if (mode == instdata::AM_HL_SPR)
+    {
+        // this is just for LD HL, SP + e8, Opcode F8
+        uint8_t hflag = ((cpu_read_reg(reg_2) & 0xF) + (fetched_data & 0xF)) >= 0x10;
+        uint8_t cflag = ((cpu_read_reg(reg_2) & 0xFF) + (fetched_data & 0xFF)) >= 0x100;
+
+        cpu_set_flags(0, 0, hflag, cflag);
+        cpu_set_reg(reg_1, cpu_read_reg(reg_2) + (char)fetched_data);
+
+        return;
+    }
+
+    cpu_set_reg(reg_1, fetched_data);
+
 }
 void cpu::fIN_DEC()
 {
-    if (this->mode == instdata::AM_R)
+    uint16_t val = cpu_read_reg(reg_1) - 1;
+
+    if (cpu::is_16_bit(reg_1))
     {
-        this->cpu_set_reg(this->reg_1, this->fetched_data - 1);
+        e->emu_cycles(1);
     }
-    else 
+
+    if (reg_1 == instdata::RT_HL && mode == instdata::AM_MR)
     {
-        NO_IMPL
+        val = b->bus_read(cpu_read_reg(instdata::RT_HL)) - 1;
+        b->bus_write(cpu_read_reg(instdata::RT_HL), (uint8_t)val);
+    } else {
+        cpu_set_reg(reg_1, val);
+        val = cpu_read_reg(reg_1);
     }
+
+    if ((cur_opcode & 0x0B) == 0x0B)
+    {
+        return;
+    }
+
+    cpu_set_flags(val == 0, 1, (val & 0x0F) == 0x0F, -1);
+
 }
 void cpu::fIN_JP()
 {
-    if (this->check_cond())
+    if (check_cond())
     {
-        this->regs.PC = this->fetched_data;
-        this->e->emu_cycles(1);
+        regs.PC = fetched_data;
+        e->emu_cycles(1);
     }
 }
 void cpu::fIN_DI()
@@ -40,7 +85,35 @@ void cpu::fIN_DI()
 }
 void cpu::fIN_XOR()
 {
-    this->regs.A ^= this->fetched_data & 0xFF;
-    this->set_flags((this - regs.A == 0), 0, 0, 0);
+    regs.A ^= fetched_data & 0xFF;
+    cpu_set_flags((regs.A == 0), 0, 0, 0);
 }
 
+void cpu::fIN_INC()
+{
+    uint16_t val = cpu_read_reg(reg_1) + 1;
+
+    if (cpu::is_16_bit(reg_1))
+    {
+        e->emu_cycles(1);
+    }
+
+    if (reg_1 == instdata::RT_HL && mode == instdata::AM_MR)
+    {
+        val = b->bus_read(cpu_read_reg(instdata::RT_HL)) + 1;
+        val &= 0xFF;
+        b->bus_write(cpu_read_reg(instdata::RT_HL), (uint8_t)val);
+    }
+    else {
+        cpu_set_reg(reg_1, val);
+        val = cpu_read_reg(reg_1);
+    }
+
+    if ((cur_opcode & 0x0B) == 0x0B)
+    {
+        return;
+    }
+
+    cpu_set_flags(val == 0, 1, (val & 0x0F) == 0x0F, -1);
+
+}
