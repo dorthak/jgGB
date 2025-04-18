@@ -45,6 +45,16 @@ void cpu::fIN_LD()
     cpu_set_reg(reg_1, fetched_data);
 
 }
+void cpu::fIN_LDH()
+{
+    if (reg_1 == instdata::RT_A)
+    {
+        cpu_set_reg(reg_1, b->bus_read(0xFF00 | fetched_data));
+    } else {
+        b->bus_write(mem_dest, regs.A);
+    }
+    e->emu_cycles(1);
+}
 void cpu::fIN_DEC()
 {
     uint16_t val = cpu_read_reg(reg_1) - 1;

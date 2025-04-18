@@ -66,7 +66,7 @@ private:
 	void fIN_JP();
 	void fIN_DI();
 	void fIN_XOR();
-
+	void fIN_LDH();
 
 
 	//registers
