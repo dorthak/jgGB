@@ -156,51 +156,12 @@ bool cart::cart_loaded()
     return cartloaded;
 }
 
-//bool cart::cart_load(char* cartfilename)
-//{
-//    snprintf(this->filename, sizeof(this->filename), "%s", cartfilename);
-//
-//    errno_t err;
-//    FILE* fp;
-//
-//    err = fopen_s(&fp, cartfilename, "r");
-//    
-//    if (err)
-//    {
-//        std::cout << "Failed to open: " << cartfilename << std::endl;
-//        return false;
-//    }
-//
-//    fseek(fp, 0, SEEK_END);
-//    this->rom_size = ftell(fp);
-//
-//    rewind(fp);
-//
-//    this->rom_data = (uint8_t *)malloc(this->rom_size);
-//    fread(this->rom_data, this->rom_size, 1, fp);
-//    fclose(fp);
-//
-//    this->header = (cart::rom_header*) (this->rom_data + 0x100);
-//    this->header->title[15] = 0;
-//
-//    printf("Cartridge Loaded:\n");
-//    printf("\t Title    : %s\n", this->header->title);
-//    printf("\t Type     : %2.2X (%s)\n", this->header->type, cart_type_name().c_str());
-//    printf("\t ROM Size : %d KB\n", 32 << this->header->rom_size);
-//    printf("\t RAM Size : %2.2X\n", this->header->ram_size);
-//    printf("\t LIC Code : %2.2X (%s)\n", this->header->lic_code, cart_lic_name().c_str());
-//    printf("\t ROM Vers : %2.2X\n", this->header->version);
-//
-//
-//    return true;
-//
-//}
-
 uint8_t cart::cart_read(uint16_t address)
 {
     return rom_data[address];
 }
 void cart::cart_write(uint16_t address, uint8_t value)
 {
+    printf("cart_write(%04X)\n", address);
     NO_IMPL
 }

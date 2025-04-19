@@ -3,6 +3,7 @@
 #include "emu.h"
 #include "cart.h"
 #include "bus.h"
+#include "ram.h"
 
 class cpu;
 
@@ -25,6 +26,7 @@ private:
 	bus *b;
 	cpu *c;
 	cart *crt;
+	ram* r;
 	
 	bool paused;
 	bool running;

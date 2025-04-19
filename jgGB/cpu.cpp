@@ -30,11 +30,11 @@ bool cpu::cpu_step() {
             regs.Fr & (1 << 4) ? 'C' : '-'
         );
 
-        printf("%08lX - %04X: %-7s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X\n",
+        printf("%08lX - %04X: %-7s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
             (unsigned long)e->get_ticks(),
             pc, inst_name(type).c_str(), cur_opcode,
             b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
-            regs.D, regs.E, regs.H, regs.L);
+            regs.D, regs.E, regs.H, regs.L, regs.SP);
 
         if (!(fetch_data()))
         {
@@ -369,8 +369,16 @@ bool cpu::check_cond()
     }
 }
 
-
 bool cpu::is_16_bit(instdata::reg_type rt)
 {
     return rt >= instdata::RT_AF;
+}
+
+uint8_t cpu::cpu_get_ie_register()
+{
+    return ie_register;
+}
+void cpu::cpu_set_ie_register(uint8_t n)
+{
+    ie_register = n;
 }

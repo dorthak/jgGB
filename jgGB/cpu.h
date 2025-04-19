@@ -15,12 +15,19 @@ public:
 	~cpu();
 	bool cpu_step();
 
+	uint8_t cpu_get_ie_register();
+	void cpu_set_ie_register(uint8_t n);
+
 private:
 
 	bus* b;
 	emu* e;
 
 	//current instruction parameters
+	uint16_t fetched_data = 0;
+	uint16_t mem_dest = 0;
+	bool dest_is_mem = false;
+	uint8_t cur_opcode = 0;
 	instdata::in_type type;
 	instdata::addr_mode mode;
 	instdata::reg_type reg_1;
@@ -111,13 +118,9 @@ private:
 	} cpu_registers;
 
 	cpu_registers regs;
-	uint16_t fetched_data = 0;
-	uint16_t mem_dest = 0;
-	bool dest_is_mem = false;
-	uint8_t cur_opcode = 0;
 	//instruction* cur_inst = 0;
 
-
+	uint8_t ie_register;
 
 	bool halted = false;
 	bool stepping = false;
@@ -131,6 +134,7 @@ private:
 	bool execute();
 	void cpu_set_flags(char z, char n, char h, char c);
 	bool check_cond();
+
 
 
 	#define CPU_FLAG_Z BIT(this->regs.Fr, 7)

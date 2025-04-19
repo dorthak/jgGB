@@ -155,6 +155,7 @@
     <ClInclude Include="instruction.h" />
     <ClInclude Include="ppu.h" />
     <ClInclude Include="instdata.h" />
+    <ClInclude Include="ram.h" />
     <ClInclude Include="reg.h" />
     <ClInclude Include="timer.h" />
   </ItemGroup>
@@ -168,6 +169,7 @@
     <ClCompile Include="instruction.cpp" />
     <ClCompile Include="ppu.cpp" />
     <ClCompile Include="instdata.cpp" />
+    <ClCompile Include="ram.cpp" />
     <ClCompile Include="reg.cpp" />
     <ClCompile Include="timer.cpp" />
   </ItemGroup>

@@ -21,6 +21,9 @@ emu::emu()
 	b = new bus();
 	crt = new cart();
 	c = new cpu(b, this);
+	r = new ram();
+	b->set_cpu(c);
+	b->set_ram(r);
 }
 
 emu::~emu()
@@ -56,6 +59,7 @@ int emu::emu_start(int argc, char** argv)
 	}
 
 	b->set_cart(crt);
+
 
 	printf("Cart loaded..\n");
 	return 0;
