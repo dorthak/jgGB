@@ -210,3 +210,9 @@ void cpu::fIN_RST()
     goto_addr(param, true);
 }
 
+void cpu::fIN_RETI()
+{
+    int_master_enabled = true;
+    fIN_RET();
+}
+
