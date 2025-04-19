@@ -4,6 +4,7 @@
 #include "cart.h"
 #include "bus.h"
 #include "ram.h"
+#include "stack.h"
 
 class cpu;
 
@@ -27,6 +28,7 @@ private:
 	cpu *c;
 	cart *crt;
 	ram* r;
+	stack* s;
 	
 	bool paused;
 	bool running;

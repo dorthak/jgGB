@@ -19,11 +19,13 @@ emu::emu()
 	ticks = 0;
 
 	b = new bus();
+	s = new stack(b);
 	crt = new cart();
-	c = new cpu(b, this);
+	c = new cpu(b, this, s);
 	r = new ram();
 	b->set_cpu(c);
 	b->set_ram(r);
+	s->set_cpu(c);
 }
 
 emu::~emu()

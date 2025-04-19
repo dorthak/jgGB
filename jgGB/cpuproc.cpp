@@ -127,3 +127,33 @@ void cpu::fIN_INC()
     cpu_set_flags(val == 0, 1, (val & 0x0F) == 0x0F, -1);
 
 }
+
+void cpu::fIN_POP()
+{
+    uint16_t lo = s->stack_pop();
+    e->emu_cycles(1);
+    uint16_t hi = s->stack_pop();
+    e->emu_cycles(1);
+
+    uint16_t n = (hi << 8) | lo;
+
+    cpu_set_reg(reg_1, n);
+
+    if (reg_1 == instdata::RT_AF)
+    {
+        cpu_set_reg(reg_1, n & 0xFFF0);
+    }
+}
+void cpu::fIN_PUSH()
+{
+    uint16_t hi = (cpu_read_reg(reg_1) >> 8) & 0xFF;
+    e->emu_cycles(1);
+    s->stack_push((uint8_t) hi);
+
+    uint16_t lo = cpu_read_reg(reg_1) & 0xFF;
+    e->emu_cycles(1);
+    s->stack_push((uint8_t) lo);
+
+    e->emu_cycles(1);
+
+}

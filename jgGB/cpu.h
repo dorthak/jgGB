@@ -3,6 +3,7 @@
 #include "bus.h"
 #include "instdata.h"
 #include "emu.h"
+#include "stack.h"
 
 #define ILINE(a, b, c, d, e, g) type = instdata::##a ;  inst = &cpu::f##a;     mode = instdata::##b;  a_mode = &cpu::f##b; reg_1 = instdata::##c; reg_2 = instdata::##d;  cond = instdata::##e; param = g; break;
 
@@ -11,17 +12,61 @@
 class cpu
 {
 public:
-	cpu(bus *b, emu *e);
+	cpu(bus *b, emu *e, stack *s);
 	~cpu();
 	bool cpu_step();
 
 	uint8_t cpu_get_ie_register();
 	void cpu_set_ie_register(uint8_t n);
 
+	typedef struct
+	{
+		union
+		{
+			struct
+			{
+				uint8_t Fr; uint8_t A;
+			};
+			uint16_t AF;
+		};
+		union
+		{
+			struct
+			{
+				uint8_t C; uint8_t B;
+			};
+			uint16_t BC;
+		};
+		union
+		{
+			struct
+			{
+				uint8_t E; uint8_t D;
+			};
+			uint16_t DE;
+		};
+		union
+		{
+			struct
+			{
+				uint8_t L; uint8_t H;
+			};
+			uint16_t HL;
+		};
+		uint16_t SP;
+		uint16_t PC;
+	} cpu_registers;
+
+	cpu_registers* cpu_get_regs()
+	{
+		return &regs;
+	}
+
 private:
 
 	bus* b;
 	emu* e;
+	stack* s;
 
 	//current instruction parameters
 	uint16_t fetched_data = 0;
@@ -81,43 +126,7 @@ private:
 	//registers
 
 
-	typedef struct
-	{
-		union
-		{
-			struct
-			{ 
-				uint8_t Fr; uint8_t A;
-			};
-			uint16_t AF;
-		};
-		union
-		{
-			struct
-			{
-				uint8_t C; uint8_t B;
-			};
-			uint16_t BC;
-		};
-		union
-		{
-			struct
-			{
-				uint8_t E; uint8_t D;
-			};
-			uint16_t DE;
-		};
-		union
-		{
-			struct
-			{
-				uint8_t L; uint8_t H;
-			};
-			uint16_t HL;
-		};
-		uint16_t SP;
-		uint16_t PC;
-	} cpu_registers;
+
 
 	cpu_registers regs;
 	//instruction* cur_inst = 0;

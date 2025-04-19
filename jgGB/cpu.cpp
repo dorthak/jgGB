@@ -2,12 +2,13 @@
 #include "cpu.h"
 
 
-cpu::cpu(bus* b, emu* e)
+cpu::cpu(bus* b, emu* e, stack* s)
 {
     this->regs.PC = 0x100;
     this->regs.A = 0x01;
     this->b = b;
     this->e = e;
+    this->s = s;
 }
 
 cpu::~cpu()
@@ -225,19 +226,32 @@ void cpu::fetch_instruction()
     case 0xAF: ILINE(IN_XOR,    AM_R,       RT_A,       RT_NONE, CT_NONE, 0)
 
     // Cx
+    case 0xC1: ILINE(IN_POP,    AM_R,       RT_BC,      RT_NONE, CT_NONE, 0)
     case 0xC3: ILINE(IN_JP,     AM_D16,     RT_NONE,    RT_NONE, CT_NONE, 0)
+    case 0xC5: ILINE(IN_PUSH,   AM_R,       RT_BC,      RT_NONE, CT_NONE, 0)
+
+    // Dx
+    case 0xD1: ILINE(IN_POP,   AM_R,       RT_DE,      RT_NONE, CT_NONE, 0)
+    case 0xD5: ILINE(IN_PUSH,   AM_R,       RT_DE,      RT_NONE, CT_NONE, 0)
+    
 
     // Ex
     case 0xE0: ILINE(IN_LDH,    AM_A8_R,    RT_NONE,    RT_A,    CT_NONE, 0)
+    case 0xE1: ILINE(IN_POP,    AM_R,       RT_HL,      RT_NONE, CT_NONE, 0)
     case 0xE2: ILINE(IN_LDH,    AM_MR_R,    RT_C,       RT_A,    CT_NONE, 0)
+    case 0xE5: ILINE(IN_PUSH,   AM_R,       RT_HL,      RT_NONE, CT_NONE, 0)
+
     case 0xEA: ILINE(IN_LD,     AM_A16_R,   RT_NONE,    RT_A,    CT_NONE, 0)
 
         
     // Fx
     case 0xF0: ILINE(IN_LDH,    AM_R_A8,    RT_A,       RT_NONE, CT_NONE, 0)
+    case 0xF1: ILINE(IN_POP,   AM_R,       RT_AF,      RT_NONE, CT_NONE, 0)
+
     case 0xF2: ILINE(IN_LD,     AM_R_MR,    RT_A,       RT_C,    CT_NONE, 0)
 
     case 0xF3: ILINE(IN_DI,     AM_IMP,     RT_NONE,    RT_NONE, CT_NONE, 0)
+    case 0xF5: ILINE(IN_PUSH,   AM_R,       RT_AF,      RT_NONE, CT_NONE, 0)
     
     case 0xFA: ILINE(IN_LD,     AM_R_A16,   RT_A,       RT_NONE, CT_NONE, 0)
 
