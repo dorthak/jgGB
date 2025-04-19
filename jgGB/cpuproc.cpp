@@ -163,7 +163,7 @@ void cpu::goto_addr(uint16_t addr, bool pushpc)
         }
 
         regs.PC = addr;
-        e->emu_cycles(2);
+        e->emu_cycles(1);
     }
 }
 
@@ -177,11 +177,30 @@ void cpu::fIN_JR()
     char rel = (char)(fetched_data & 0xFF);
     uint16_t addr = regs.PC + rel;
     goto_addr(addr, false);
-
 }
 
 void cpu::fIN_CALL()
 {
    goto_addr(fetched_data, true);
+}
 
+void cpu::fIN_RET()
+{
+    if (cond != instdata::CT_NONE)
+    {
+        e->emu_cycles(1);
+    }
+
+    if (check_cond())
+    {
+        uint16_t lo = s->stack_pop();
+        e->emu_cycles(1);
+        uint16_t hi = s->stack_pop();
+        e->emu_cycles(1);
+        
+        uint16_t n = (hi << 8) | lo;
+        regs.PC = n;
+        e->emu_cycles(1);
+    }
+    
 }
