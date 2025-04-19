@@ -86,12 +86,6 @@ void cpu::fIN_DI()
     this->int_master_enabled = false;
 }
 
-void cpu::fIN_XOR()
-{
-    regs.A ^= fetched_data & 0xFF;
-    cpu_set_flags((regs.A == 0), 0, 0, 0);
-}
-
 void cpu::fIN_INC()
 {
     uint16_t val = cpu_read_reg(reg_1) + 1;
@@ -295,4 +289,22 @@ void cpu::fIN_SBC()
     cpu_set_reg(reg_1, cpu_read_reg(reg_1) - val);
 
     cpu_set_flags(z, 1, h, c);
+}
+
+void cpu::fIN_XOR()
+{
+    regs.A ^= fetched_data & 0xFF;
+    cpu_set_flags((regs.A == 0), 0, 0, 0);
+}
+
+void cpu::fIN_AND()
+{
+    regs.A &= fetched_data & 0xFF;
+    cpu_set_flags((regs.A == 0), 0, 1, 0);
+}
+
+void cpu::fIN_OR()
+{
+    regs.A |= fetched_data & 0xFF;
+    cpu_set_flags((regs.A == 0), 0, 0, 0);
 }

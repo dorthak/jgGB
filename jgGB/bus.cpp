@@ -96,7 +96,7 @@ void bus::bus_write(uint16_t address, uint8_t value)
 		//Char/Map Data
 		//TODO
 		printf("UNSUPPORTED bus_write(%04X)\n", address);
-		NO_IMPL
+		//NO_IMPL
 	} else if (address < 0xC000) {
 		//Cartridge RAM
 		crt->cart_write(address, value);
@@ -110,14 +110,14 @@ void bus::bus_write(uint16_t address, uint8_t value)
 		//OAM
 		//TODO
 		printf("UNSUPPORTED bus_write(%04X)\n", address);
-		NO_IMPL
+		//NO_IMPL
 	} else if (address < 0xFF00) {
 		//reserved unsuable
 	} else if (address < 0xFF80) {
 		//IO Registers...
 		//TODO
 		printf("UNSUPPORTED bus_write(%04X)\n", address);
-		NO_IMPL
+		//NO_IMPL
 	} else if (address == 0xFFFF) {
 		//CPU ENABLE REGISTER
 		//TODO

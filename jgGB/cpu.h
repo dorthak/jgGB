@@ -128,10 +128,11 @@ private:
 	void fIN_ADC();
 	void fIN_SUB();
 	void fIN_SBC();
-	void fIN_RETI();
+	void fIN_AND();
 	void fIN_XOR();
+	void fIN_OR();
 
-
+	void fIN_RETI();
 	//registers
 
 
