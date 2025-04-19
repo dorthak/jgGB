@@ -118,6 +118,7 @@ private:
 	void fIN_DI();
 	void fIN_POP();
 	void fIN_PUSH();
+	void fIN_JR();
 	void fIN_DEC();
 	void fIN_INC();
 	void fIN_XOR();
@@ -146,7 +147,7 @@ private:
 	void cpu_set_flags(char z, char n, char h, char c);
 	bool check_cond();
 
-
+	void goto_addr(uint16_t addr, bool pushpc);
 
 	#define CPU_FLAG_Z BIT(this->regs.Fr, 7)
 	#define CPU_FLAG_C BIT(this->regs.Fr, 4)

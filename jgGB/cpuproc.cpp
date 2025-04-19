@@ -81,14 +81,7 @@ void cpu::fIN_DEC()
     cpu_set_flags(val == 0, 1, (val & 0x0F) == 0x0F, -1);
 
 }
-void cpu::fIN_JP()
-{
-    if (check_cond())
-    {
-        regs.PC = fetched_data;
-        e->emu_cycles(1);
-    }
-}
+
 void cpu::fIN_DI()
 {
     this->int_master_enabled = false;
@@ -155,5 +148,34 @@ void cpu::fIN_PUSH()
     s->stack_push((uint8_t) lo);
 
     e->emu_cycles(1);
+
+}
+
+
+void cpu::goto_addr(uint16_t addr, bool pushpc)
+{
+    if (check_cond())
+    {
+        if (pushpc)
+        {
+            e->emu_cycles(2);
+            s->stack_push16(regs.PC);
+        }
+
+        regs.PC = addr;
+        e->emu_cycles(2);
+    }
+}
+
+void cpu::fIN_JP()
+{
+    goto_addr(fetched_data, false);
+}
+
+void cpu::fIN_JR()
+{
+    char rel = (char)(fetched_data & 0xFF);
+    uint16_t addr = regs.PC + rel;
+    goto_addr(addr, false);
 
 }
