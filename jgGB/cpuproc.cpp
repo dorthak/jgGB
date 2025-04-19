@@ -308,3 +308,11 @@ void cpu::fIN_OR()
     regs.A |= fetched_data & 0xFF;
     cpu_set_flags((regs.A == 0), 0, 0, 0);
 }
+
+void cpu::fIN_CP()
+{
+    int n = (int)regs.A - (int)fetched_data;
+
+    cpu_set_flags((n == 0), 1, 
+        ((int)regs.A & 0x0F) - ((int)fetched_data & 0x0F) < 0, n < 0);
+}

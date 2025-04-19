@@ -131,6 +131,7 @@ private:
 	void fIN_AND();
 	void fIN_XOR();
 	void fIN_OR();
+	void fIN_CP();
 
 	void fIN_RETI();
 	//registers

@@ -297,6 +297,14 @@ void cpu::fetch_instruction()
     case 0xB5: ILINE(IN_OR,     AM_R_R,     RT_A,       RT_L,    CT_NONE,       0)
     case 0xB6: ILINE(IN_OR,     AM_R_MR,    RT_A,       RT_HL,   CT_NONE,       0)  
     case 0xB7: ILINE(IN_OR,     AM_R_R,     RT_A,       RT_A,    CT_NONE,       0)
+    case 0xB8: ILINE(IN_CP,     AM_R_R,     RT_A,       RT_B,    CT_NONE,       0)
+    case 0xB9: ILINE(IN_CP,     AM_R_R,     RT_A,       RT_C,    CT_NONE,       0)
+    case 0xBA: ILINE(IN_CP,     AM_R_R,     RT_A,       RT_D,    CT_NONE,       0)
+    case 0xBB: ILINE(IN_CP,     AM_R_R,     RT_A,       RT_E,    CT_NONE,       0)
+    case 0xBC: ILINE(IN_CP,     AM_R_R,     RT_A,       RT_H,    CT_NONE,       0)
+    case 0xBD: ILINE(IN_CP,     AM_R_R,     RT_A,       RT_L,    CT_NONE,       0)
+    case 0xBE: ILINE(IN_CP,     AM_R_MR,    RT_A,       RT_HL,   CT_NONE,       0)  
+    case 0xBF: ILINE(IN_CP,     AM_R_R,     RT_A,       RT_A,    CT_NONE,       0)
 
 
     // Cx
@@ -361,6 +369,7 @@ void cpu::fetch_instruction()
 
     case 0xFA: ILINE(IN_LD,     AM_R_A16,   RT_A,       RT_NONE, CT_NONE,       0)
 
+    case 0xFE: ILINE(IN_CP,     AM_D8,      RT_A,       RT_NONE, CT_NONE,       0)
     case 0xFF: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x38)    
 
     default:   ILINE(IN_NONE,   AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,       0)
