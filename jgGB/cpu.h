@@ -133,6 +133,13 @@ private:
 	void fIN_OR();
 	void fIN_CP();
 	void fIN_CB();
+	void fIN_RRCA();
+	void fIN_RLCA();
+	void fIN_RRA();
+	void fIN_RLA();
+	void fIN_STOP();
+	void fIN_HALT();
+
 	void fIN_RETI();
 	//registers
 
@@ -160,6 +167,8 @@ private:
 	void goto_addr(uint16_t addr, bool pushpc);
 
 	#define CPU_FLAG_Z BIT(this->regs.Fr, 7)
+	#define CPU_FLAG_N BIT(this->regs.Fr, 6)
+	#define CPU_FLAG_H BIT(this->regs.Fr, 5)
 	#define CPU_FLAG_C BIT(this->regs.Fr, 4)
 
 

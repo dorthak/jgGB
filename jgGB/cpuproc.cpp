@@ -447,3 +447,53 @@ void cpu::fIN_CB()
     NO_IMPL
 }
 
+void cpu::fIN_RRCA()
+{
+    uint8_t b = regs.A & 1;
+    regs.A >>= 1;
+    regs.A |= (b << 7);
+
+    cpu_set_flags(0, 0, 0, b);
+
+}
+void cpu::fIN_RLCA()
+{
+    uint8_t u = regs.A;
+    bool c = (u >> 7) & 1;
+    u = (u << 1) | c;
+    regs.A = u;
+    
+    cpu_set_flags(0, 0, 0, c);
+}
+void cpu::fIN_RRA()
+{
+    uint8_t carry = CPU_FLAG_C;
+    uint8_t new_c = regs.A & 1;
+
+    regs.A >>= 1;
+    regs.A |= (carry << 7);
+
+    cpu_set_flags(0, 0, 0, new_c);
+}
+void cpu::fIN_RLA()
+{
+    uint8_t u = regs.A;
+    uint8_t cf = CPU_FLAG_C;
+    uint8_t c = (u >> 7) & 1;
+
+    
+    regs.A = (u << 1) | cf;
+
+    cpu_set_flags(0, 0, 0, c);
+}
+
+void cpu::fIN_STOP()
+{
+    std::cerr << "STOPPING!" << std::endl;
+    NO_IMPL
+}
+
+void cpu::fIN_HALT()
+{
+    halted = true;
+}
