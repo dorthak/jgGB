@@ -319,6 +319,7 @@ void cpu::fetch_instruction()
     case 0xC8: ILINE(IN_RET,    AM_IMP,     RT_NONE,    RT_NONE, CT_Z,          0)
     case 0xC9: ILINE(IN_RET,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,       0)
     case 0xCA: ILINE(IN_JP,     AM_D16,     RT_NONE,    RT_NONE, CT_Z,          0)
+    case 0xCB: ILINE(IN_CB,     AM_D8,      RT_NONE,    RT_NONE, CT_NONE,       0)
     case 0xCC: ILINE(IN_CALL,   AM_D16,     RT_NONE,    RT_NONE, CT_Z,          0)
     case 0xCD: ILINE(IN_CALL,   AM_D16,     RT_NONE,    RT_NONE, CT_NONE,       0)
     case 0xCE: ILINE(IN_ADC,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0)
@@ -514,3 +515,12 @@ void cpu::cpu_set_ie_register(uint8_t n)
 }
 
 
+instdata::reg_type cpu::decode_reg(uint8_t reg) const
+{
+    if (reg > 0b111)
+    {
+        return instdata::RT_NONE;
+    }
+
+    return rt_lookup[reg];
+}

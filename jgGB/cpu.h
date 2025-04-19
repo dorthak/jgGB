@@ -132,7 +132,7 @@ private:
 	void fIN_XOR();
 	void fIN_OR();
 	void fIN_CP();
-
+	void fIN_CB();
 	void fIN_RETI();
 	//registers
 
@@ -219,6 +219,19 @@ private:
 
 	static bool is_16_bit(instdata::reg_type rt);
 
+	instdata::reg_type decode_reg(uint8_t reg) const;
+
+	instdata::reg_type const rt_lookup[8] = {
+		instdata::RT_B,
+		instdata::RT_C,
+		instdata::RT_D,
+		instdata::RT_E,
+		instdata::RT_H,
+		instdata::RT_L,
+		instdata::RT_HL,
+		instdata::RT_A
+	};
 
 };
+
 

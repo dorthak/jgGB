@@ -316,3 +316,134 @@ void cpu::fIN_CP()
     cpu_set_flags((n == 0), 1, 
         ((int)regs.A & 0x0F) - ((int)fetched_data & 0x0F) < 0, n < 0);
 }
+
+void cpu::fIN_CB()
+{
+    uint8_t op = (uint8_t) fetched_data;
+    instdata::reg_type reg = decode_reg(op & 0b111);
+
+    uint8_t bit = (op >> 3) & 0b111;
+    uint8_t bit_op = (op >> 6) & 0b11;
+    uint8_t reg_val = (uint8_t) cpu_read_reg(reg);
+
+    e->emu_cycles(1);
+
+    if (reg == instdata::RT_HL)
+    {
+        e->emu_cycles(2);
+    }
+
+    switch (bit_op)
+    {
+    case 1:
+        //BIT
+        cpu_set_flags(!(reg_val & (1 << bit)), 0, 1, -1);
+        return;
+    case 2:
+        //RES
+        reg_val &= ~(1 << bit);
+        cpu_set_reg(reg, reg_val);
+        return;
+    case 3:
+        //SET
+        reg_val |= ~(1 << bit);
+        cpu_set_reg(reg, reg_val);
+        return;
+    }
+
+    bool flagC = CPU_FLAG_C;
+
+    switch (bit)
+    {
+        case 0: 
+        {
+            //RLC
+            bool setC = false;
+            uint8_t result = (reg_val << 1) & 0xFF;
+
+            if ((reg_val & (1 << 7)) != 0)
+            {
+                result |= 1;
+                setC = true;
+            }
+            cpu_set_reg(reg, result);
+            cpu_set_flags(result == 0, 0, 0, setC);
+            return;
+        }
+        case 1:
+        {
+            //RRC
+            uint8_t old = reg_val;
+            reg_val >>= 1;
+            reg_val |= (old << 7);
+
+            cpu_set_reg(reg, reg_val);
+            cpu_set_flags(!reg_val, 0, 0, old & 1);
+            return;
+        }
+        case 2:
+        {
+            //RL
+            uint8_t old = reg_val;
+            reg_val <<= 1;
+            reg_val |= (uint8_t)flagC;
+
+            cpu_set_reg(reg, reg_val);
+            cpu_set_flags(!reg_val, 0, 0, !!(old & 0x80));
+            return;
+        }
+        case 3:
+        {
+            //RR
+            uint8_t old = reg_val;
+            reg_val >>= 1;
+            reg_val |= (flagC << 7);
+
+            cpu_set_reg(reg, reg_val);
+            cpu_set_flags(!reg_val, 0, 0, old & 1);
+            return;
+        }
+        case 4:
+        {
+            //SLA
+            uint8_t old = reg_val;
+            reg_val <<= 1;
+
+
+            cpu_set_reg(reg, reg_val);
+            cpu_set_flags(!reg_val, 0, 0, !!(old & 0x80));
+            return;
+        }
+        case 5:
+        {
+            //SRA
+            uint8_t u = (int8_t)reg_val >> 1;
+
+            cpu_set_reg(reg, u);
+            cpu_set_flags(!u, 0, 0, reg_val & 1);
+            return;
+        }
+        case 6:
+        {
+            //SWAP
+            reg_val = ((reg_val & 0xF0) >> 4) | ((reg_val & 0x0F) << 4);
+
+            cpu_set_reg(reg, reg_val);
+            cpu_set_flags(reg_val == 0, 0, 0, 0);
+            return;
+        }
+        case 7:
+        {
+            //SRL
+            uint8_t u = reg_val >> 1;
+
+            cpu_set_reg(reg, u);
+            cpu_set_flags(!u, 0, 0, reg_val & 1);
+            return;
+        }
+    }
+
+    std::cerr << "ERROR: INVALID CB: " << op << std::endl;
+    NO_IMPL
+}
+
