@@ -79,13 +79,13 @@ void cpu::fIN_DEC()
     }
 
     cpu_set_flags(val == 0, 1, (val & 0x0F) == 0x0F, -1);
-
 }
 
 void cpu::fIN_DI()
 {
     this->int_master_enabled = false;
 }
+
 void cpu::fIN_XOR()
 {
     regs.A ^= fetched_data & 0xFF;
@@ -216,3 +216,40 @@ void cpu::fIN_RETI()
     fIN_RET();
 }
 
+void cpu::fIN_ADD()
+{
+    uint32_t val = cpu_read_reg(reg_1) + fetched_data;
+
+    bool is_16bit = is_16_bit(reg_1);
+
+    if (is_16bit)
+    {
+        e->emu_cycles(1);
+    }
+
+    if (reg_1 == instdata::RT_SP)
+    {
+        val = cpu_read_reg(reg_1) + (char)fetched_data;
+    }
+
+    int z = (val & 0xFF) == 0;
+    int h = (cpu_read_reg(reg_1) & 0xF) + (fetched_data & 0xF) >= 0x10;
+    int c = (int)(cpu_read_reg(reg_1) & 0xFF) + (int)(fetched_data & 0xFF) >= 0x100;
+
+    if (is_16bit)
+    {
+        z = -1;
+        h = (cpu_read_reg(reg_1) & 0xFFF) + (fetched_data & 0xFFF) >= 0x1000;
+        uint32_t n = ((uint32_t)cpu_read_reg(reg_1)) + ((uint32_t)fetched_data);
+        c = n >= 0x10000;
+    }
+
+    if (reg_1 == instdata::RT_SP)
+    {
+        z = 0;
+        h = (cpu_read_reg(reg_1) & 0xF) + (fetched_data & 0xF) >= 0x10;
+        c = (int)(cpu_read_reg(reg_1) & 0xFF) + (int)(fetched_data & 0xFF) >= 0x100;
+    }
+    cpu_set_reg(reg_1, val & 0xFFFF);
+    cpu_set_flags(z, 0, h, c);
+}

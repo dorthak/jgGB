@@ -96,6 +96,7 @@ void cpu::fetch_instruction()
     case 0x05: ILINE(IN_DEC,    AM_R,       RT_B,       RT_NONE, CT_NONE,       0)
     case 0x06: ILINE(IN_LD,     AM_R_D8,    RT_B,       RT_NONE, CT_NONE,       0)
 
+    case 0x09: ILINE(IN_ADD,    AM_R_R,     RT_HL,      RT_BC,   CT_NONE,       0)
     case 0x0A: ILINE(IN_LD,     AM_R_MR,    RT_A,       RT_BC,   CT_NONE,       0)
     case 0x0B: ILINE(IN_DEC,    AM_R,       RT_BC,      RT_NONE, CT_NONE,       0)
 
@@ -114,7 +115,7 @@ void cpu::fetch_instruction()
     case 0x16: ILINE(IN_LD,     AM_R_D8,    RT_D,       RT_NONE, CT_NONE,       0)
 
     case 0x18: ILINE(IN_JR,     AM_D8,      RT_NONE,    RT_NONE, CT_NONE,       0)
-
+    case 0x19: ILINE(IN_ADD,    AM_R_R,     RT_HL,      RT_DE,   CT_NONE,       0)
     case 0x1A: ILINE(IN_LD,     AM_R_MR,    RT_A,       RT_DE,   CT_NONE,       0)
     case 0x1B: ILINE(IN_DEC,    AM_R,       RT_DE,      RT_NONE, CT_NONE,       0)
     case 0x1C: ILINE(IN_INC,    AM_R,       RT_E,       RT_NONE, CT_NONE,       0)
@@ -134,7 +135,7 @@ void cpu::fetch_instruction()
     case 0x26: ILINE(IN_LD,     AM_R_D8,    RT_H,       RT_NONE, CT_NONE,       0)
 
     case 0x28: ILINE(IN_JR,     AM_D8,      RT_NONE,    RT_NONE, CT_Z,          0)
-
+    case 0x29: ILINE(IN_ADD,    AM_R_R,     RT_HL,      RT_HL,   CT_NONE,       0)
     case 0x2A: ILINE(IN_LD,     AM_R_HLI,   RT_A,       RT_HL,   CT_NONE,       0)
     case 0x2B: ILINE(IN_DEC,    AM_R,       RT_HL,      RT_NONE, CT_NONE,       0)
     case 0x2C: ILINE(IN_INC,    AM_R,       RT_L,       RT_NONE, CT_NONE,       0)
@@ -152,7 +153,7 @@ void cpu::fetch_instruction()
     case 0x36: ILINE(IN_LD,     AM_MR_D8,   RT_HL,      RT_NONE, CT_NONE,       0)
 
     case 0x38: ILINE(IN_JR,     AM_D8,      RT_NONE,    RT_NONE, CT_C,          0)
-    
+    case 0x39: ILINE(IN_ADD,    AM_R_R,     RT_HL,      RT_SP,   CT_NONE,       0)
     case 0x3A: ILINE(IN_LD,     AM_R_HLD,   RT_A,       RT_HL,   CT_NONE,       0)
     case 0x3B: ILINE(IN_DEC,    AM_MR,      RT_HL,      RT_NONE, CT_NONE,       0)
     case 0x3C: ILINE(IN_INC,    AM_R,       RT_A,       RT_NONE, CT_NONE,       0)
@@ -232,8 +233,25 @@ void cpu::fetch_instruction()
     case 0x7E: ILINE(IN_LD,     AM_R_MR,    RT_A,       RT_HL,   CT_NONE,       0)
     case 0x7F: ILINE(IN_LD,     AM_R_R,     RT_A,       RT_A,    CT_NONE,       0)
 
+    // 8x
+    case 0x80: ILINE(IN_ADD,    AM_R_R,     RT_A,       RT_B,    CT_NONE,       0)
+    case 0x81: ILINE(IN_ADD,    AM_R_R,     RT_A,       RT_C,    CT_NONE,       0)
+    case 0x82: ILINE(IN_ADD,    AM_R_R,     RT_A,       RT_D,    CT_NONE,       0)
+    case 0x83: ILINE(IN_ADD,    AM_R_R,     RT_A,       RT_E,    CT_NONE,       0)
+    case 0x84: ILINE(IN_ADD,    AM_R_R,     RT_A,       RT_H,    CT_NONE,       0)
+    case 0x85: ILINE(IN_ADD,    AM_R_R,     RT_A,       RT_L,    CT_NONE,       0)
+    case 0x86: ILINE(IN_ADD,    AM_R_MR,    RT_A,       RT_HL,   CT_NONE,       0)
+    case 0x87: ILINE(IN_ADD,    AM_R_R,     RT_A,       RT_A,    CT_NONE,       0)
+
         
     // Ax
+    case 0xA8: ILINE(IN_XOR,    AM_R_R,     RT_A,       RT_B,    CT_NONE,       0)
+    case 0xA9: ILINE(IN_XOR,    AM_R_R,     RT_A,       RT_C,    CT_NONE,       0)
+    case 0xAA: ILINE(IN_XOR,    AM_R_R,     RT_A,       RT_D,    CT_NONE,       0)
+    case 0xAB: ILINE(IN_XOR,    AM_R_R,     RT_A,       RT_E,    CT_NONE,       0)
+    case 0xAC: ILINE(IN_XOR,    AM_R_R,     RT_A,       RT_H,    CT_NONE,       0)
+    case 0xAD: ILINE(IN_XOR,    AM_R_R,     RT_A,       RT_L,    CT_NONE,       0)
+    case 0xAE: ILINE(IN_XOR,    AM_R_MR,    RT_A,       RT_HL,   CT_NONE,       0)  //CHECK
     case 0xAF: ILINE(IN_XOR,    AM_R,       RT_A,       RT_NONE, CT_NONE,       0)
 
     // Cx
@@ -243,6 +261,7 @@ void cpu::fetch_instruction()
     case 0xC3: ILINE(IN_JP,     AM_D16,     RT_NONE,    RT_NONE, CT_NONE,       0)
     case 0xC4: ILINE(IN_CALL,   AM_D16,     RT_NONE,    RT_NONE, CT_NZ,         0)
     case 0xC5: ILINE(IN_PUSH,   AM_R,       RT_BC,      RT_NONE, CT_NONE,       0)
+    case 0xC6: ILINE(IN_ADD,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0)
     case 0xC7: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x00)
     case 0xC8: ILINE(IN_RET,    AM_IMP,     RT_NONE,    RT_NONE, CT_Z,          0)
     case 0xC9: ILINE(IN_RET,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,       0)
@@ -275,11 +294,12 @@ void cpu::fetch_instruction()
     case 0xE5: ILINE(IN_PUSH,   AM_R,       RT_HL,      RT_NONE, CT_NONE,       0)
 
     case 0xE7: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x20)
-    
+    case 0xE8: ILINE(IN_ADD,    AM_R_D8,    RT_SP,      RT_NONE, CT_NONE,       0)
     case 0xE9: ILINE(IN_JP,     AM_MR,      RT_HL,      RT_NONE, CT_NONE,       0)
 
     case 0xEA: ILINE(IN_LD,     AM_A16_R,   RT_NONE,    RT_A,    CT_NONE,       0)
 
+    case 0xEE: ILINE(IN_XOR,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0)  //VERIFY!
     case 0xEF: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x28)
         
     // Fx
