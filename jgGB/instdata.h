@@ -107,5 +107,61 @@ public:
     {
         CT_NONE, CT_NZ, CT_Z, CT_NC, CT_C
     } cond_type;
+
+
+
+    //    const std::string inst_lookup[49] = 
+//    {
+//        "<NONE>",
+//        "NOP",
+//        "LD",
+//        "INC",
+//        "DEC",
+//        "RLCA",
+//        "ADD",
+//        "RRCA",
+//        "STOP",
+//        "RLA",
+//        "JR",
+//        "RRA",
+//        "DAA",
+//        "CPL",
+//        "SCF",
+//        "CCF",
+//        "HALT",
+//        "ADC",
+//        "SUB",
+//        "SBC",
+//        "AND",
+//        "XOR",
+//        "OR",
+//        "CP",
+//        "POP",
+//        "JP",
+//        "PUSH",
+//        "RET",
+//        "CB",
+//        "CALL",
+//        "RETI",
+//        "LDH",
+//        "JPHL",
+//        "DI",
+//        "EI",
+//        "RST",
+//        "IN_ERR",
+//        "IN_RLC",
+//        "IN_RRC",
+//        "IN_RL",
+//        "IN_RR",
+//        "IN_SLA",
+//        "IN_SRA",
+//        "IN_SWAP",
+//        "IN_SRL",
+//        "IN_BIT",
+//        "IN_RES",
+//        "IN_SET",
+//    };
+
 };
+
 

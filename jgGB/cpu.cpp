@@ -9,6 +9,8 @@ cpu::cpu(bus* b, emu* e, stack* s)
     this->b = b;
     this->e = e;
     this->s = s;
+
+    disassemble_string = "                "; //reserve 16 spaces
 }
 
 cpu::~cpu()
@@ -20,8 +22,16 @@ bool cpu::cpu_step() {
     if (!(halted))
     {
         uint16_t pc = regs.PC;
-
+        
+        disassemble_string = "                ";
+        
         fetch_instruction();
+        e->emu_cycles(1);
+
+        if (!(fetch_data()))
+        {
+            return false;
+        }
 
         char flags[16];
         sprintf_s(flags, "%c%c%c%c",
@@ -31,20 +41,16 @@ bool cpu::cpu_step() {
             regs.Fr & (1 << 4) ? 'C' : '-'
         );
 
-        printf("%08lX - %04X: %-7s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
+
+        printf("%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
             (unsigned long)e->get_ticks(),
-            pc, inst_name(type).c_str(), cur_opcode,
+            pc, disassemble_string.c_str(), cur_opcode,
             b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
             regs.D, regs.E, regs.H, regs.L, regs.SP);
 
-        if (!(fetch_data()))
-        {
-            return false;
-        }
-
         if (inst == NULL)
         {
-            printf("Unknown Instruction! %02X\n", cur_opcode);
+            printf("Unknown Instruction! %02X\n", (uint8_t)cur_opcode);
             return false;
         }
         if (!(execute()))
@@ -329,7 +335,7 @@ void cpu::fetch_instruction()
     case 0xD3: break;
     case 0xD4: ILINE(IN_CALL,   AM_D16,     RT_NONE,    RT_NONE, CT_NC,         0)
     case 0xD5: ILINE(IN_PUSH,   AM_R,       RT_DE,      RT_NONE, CT_NONE,       0)
-    case 0xD6: ILINE(IN_SUB,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0)  //CHECK
+    case 0xD6: ILINE(IN_SUB,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0)  
     case 0xD7: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x10)
     case 0xD8: ILINE(IN_RET,    AM_IMP,     RT_NONE,    RT_NONE, CT_C,          0)
     case 0xD9: ILINE(IN_RETI,   AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,       0)   
@@ -347,7 +353,7 @@ void cpu::fetch_instruction()
     case 0xE3: break;
     case 0xE4: break;
     case 0xE5: ILINE(IN_PUSH,   AM_R,       RT_HL,      RT_NONE, CT_NONE,       0)
-    case 0xE6: ILINE(IN_XOR,    AM_D8,      RT_A,       RT_NONE, CT_NONE,       0) 
+    case 0xE6: ILINE(IN_XOR,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0) 
     case 0xE7: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x20)
     case 0xE8: ILINE(IN_ADD,    AM_R_D8,    RT_SP,      RT_NONE, CT_NONE,       0)
     case 0xE9: ILINE(IN_JP,     AM_MR,      RT_HL,      RT_NONE, CT_NONE,       0)
@@ -355,7 +361,7 @@ void cpu::fetch_instruction()
     case 0xEB: break;
     case 0xEC: break;
     case 0xED: break;
-    case 0xEE: ILINE(IN_XOR,    AM_D8,      RT_A,       RT_NONE, CT_NONE,       0) 
+    case 0xEE: ILINE(IN_XOR,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0) 
     case 0xEF: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x28)
         
     // Fx
@@ -365,7 +371,7 @@ void cpu::fetch_instruction()
     case 0xF3: ILINE(IN_DI,     AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,       0)
     case 0xF4: break;
     case 0xF5: ILINE(IN_PUSH,   AM_R,       RT_AF,      RT_NONE, CT_NONE,       0)
-    case 0xF6: ILINE(IN_OR,     AM_D8,      RT_A,       RT_NONE, CT_NONE,       0)
+    case 0xF6: ILINE(IN_OR,     AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0)
     case 0xF7: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x30)
     case 0xF8: ILINE(IN_LD,     AM_HL_SPR,  RT_HL,      RT_SP,   CT_NONE,       0)
     case 0xF9: ILINE(IN_LD,     AM_R_R,     RT_SP,      RT_HL,   CT_NONE,       0)
@@ -373,7 +379,7 @@ void cpu::fetch_instruction()
     case 0xFB: ILINE(IN_EI,     AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,       0)    
     case 0xFC: break;
     case 0xFD: break;
-    case 0xFE: ILINE(IN_CP,     AM_D8,      RT_A,       RT_NONE, CT_NONE,       0)
+    case 0xFE: ILINE(IN_CP,     AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0)
     case 0xFF: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x38)    
 
     default:   ILINE(IN_NONE,   AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,       0)
@@ -395,6 +401,7 @@ bool cpu::fetch_data()
         std::cout << "Unknown Addreessing Mode! " << cur_opcode << std::endl;
         return false;
     }
+
     (this->*a_mode)();
     return true;
 }
@@ -463,6 +470,25 @@ std::string cpu::inst_name(instdata::in_type t)
     return cpu::inst_lookup[t];
 }
 
+//void cpu::inst_to_str(char* str)
+//{
+//    sprintf(str, "%s ", inst_name(type));
+//
+//    switch (mode)
+//    {
+//        case instdata::AM_IMP:
+//            return;
+//        case instdata::AM_R_D16:
+//        case instdata::AM_R_A16:
+//            sprintf(str, "%s %s, $%04X", inst_name(type), rt_lookup[reg_1], fetched_data);
+//            return;
+//
+//        case instdata::AM_R:
+//            sprintf(str, "%s %s", inst_name(type), rt_lookup[reg_1]);
+//            return;
+//
+//    }
+//}
 
 void cpu::cpu_set_flags(char z, char n, char h, char c)
 {

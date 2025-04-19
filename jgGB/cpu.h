@@ -92,6 +92,8 @@ private:
 	instdata::cond_type cond;
 	uint8_t param;
 
+	std::string disassemble_string;
+
 	void (cpu::* a_mode)(void) = NULL;
 	void (cpu::*inst)(void) = NULL;
 
@@ -245,7 +247,26 @@ private:
         "IN_SET",
     };
 
+	const std::string rt_string[15] = {
+		"<NONE>",
+		"A",
+		"F",
+		"B",
+		"C",
+		"D",
+		"E",
+		"H",
+		"L",
+		"AF",
+		"BC",
+		"DE",
+		"HL",
+		"SP",
+		"PC"
+	};
+
     std::string inst_name(instdata::in_type t);
+	//void inst_to_str(char* str);
 
 	static bool is_16_bit(instdata::reg_type rt);
 
