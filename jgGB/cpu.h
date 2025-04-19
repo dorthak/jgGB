@@ -67,13 +67,15 @@ private:
 	//Operational functions
 	void fIN_NONE();
 	void fIN_NOP();
-	void fIN_DEC();
-	void fIN_INC();
 	void fIN_LD();
+	void fIN_LDH();
 	void fIN_JP();
 	void fIN_DI();
+	void fIN_POP();
+	void fIN_PUSH();
+	void fIN_DEC();
+	void fIN_INC();
 	void fIN_XOR();
-	void fIN_LDH();
 
 
 	//registers
