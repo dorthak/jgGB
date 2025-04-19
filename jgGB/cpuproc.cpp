@@ -460,7 +460,7 @@ void cpu::fIN_RLCA()
 {
     uint8_t u = regs.A;
     bool c = (u >> 7) & 1;
-    u = (u << 1) | c;
+    u = (u << 1) | (uint8_t) c;
     regs.A = u;
     
     cpu_set_flags(0, 0, 0, c);
