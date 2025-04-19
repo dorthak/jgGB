@@ -119,6 +119,7 @@ private:
 	void fIN_POP();
 	void fIN_PUSH();
 	void fIN_JR();
+	void fIN_CALL();
 	void fIN_DEC();
 	void fIN_INC();
 	void fIN_XOR();

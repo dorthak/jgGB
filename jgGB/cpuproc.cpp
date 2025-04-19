@@ -179,3 +179,9 @@ void cpu::fIN_JR()
     goto_addr(addr, false);
 
 }
+
+void cpu::fIN_CALL()
+{
+   goto_addr(fetched_data, true);
+
+}
