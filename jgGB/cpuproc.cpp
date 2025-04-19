@@ -253,3 +253,16 @@ void cpu::fIN_ADD()
     cpu_set_reg(reg_1, val & 0xFFFF);
     cpu_set_flags(z, 0, h, c);
 }
+
+void cpu::fIN_ADC()
+{
+    uint16_t u = fetched_data;
+    uint16_t a = regs.A;
+    uint16_t c = CPU_FLAG_C;
+
+    regs.A = (a + u + c) & 0xFF;
+
+    cpu_set_flags(regs.A == 0, 0,
+        (a & 0xF) + (u & 0xF) + c > 0xF,
+        a + u + c > 0xFF);
+}
