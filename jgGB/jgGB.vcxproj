@@ -159,6 +159,7 @@
     <ClInclude Include="reg.h" />
     <ClInclude Include="stack.h" />
     <ClInclude Include="timer.h" />
+    <ClInclude Include="ui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="amodefunc.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="reg.cpp" />
     <ClCompile Include="stack.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

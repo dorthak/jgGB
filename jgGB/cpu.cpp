@@ -575,3 +575,13 @@ void cpu::cpu_handle_interrupts()
     }
 
 }
+
+
+uint8_t cpu::cpu_get_int_flags()
+{
+    return int_flags;
+}
+void cpu::cpu_set_int_flags(uint8_t value)
+{
+    int_flags = value;
+}

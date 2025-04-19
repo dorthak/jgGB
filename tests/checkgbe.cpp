@@ -29,12 +29,12 @@ TEST_CASE("Emulator loads the cart or errors out", "[emu]")
 	argv[1] = (char *)"";
 
 	
-	REQUIRE(e.emu_start(0, argv) == -1);
-	REQUIRE(e.emu_start(1, argv) == -1);
-	REQUIRE(e.emu_start(2, argv) == -2);
+	REQUIRE(e.emu_cart_load(0, argv) == -1);
+	REQUIRE(e.emu_cart_load(1, argv) == -1);
+	REQUIRE(e.emu_cart_load(2, argv) == -2);
 
 	argv[1] = (char*)"e:/prog/jgGB/roms/dmg-acid2.gb";
-	REQUIRE(e.emu_start(2, argv) == 0);
+	REQUIRE(e.emu_cart_load(2, argv) == 0);
 	
 }
 
@@ -44,7 +44,7 @@ TEST_CASE("Emulator runs successfully", "[emu]")
 	emu e = emu();
 	char* argv[3];
 	argv[1] = (char*)"e:/prog/jgGB/roms/dmg-acid2.gb";
-	result = e.emu_start(2, argv);
+	result = e.emu_cart_load(2, argv);
 
 	REQUIRE(result == 0);
 	

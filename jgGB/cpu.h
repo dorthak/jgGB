@@ -19,6 +19,9 @@ public:
 	uint8_t cpu_get_ie_register();
 	void cpu_set_ie_register(uint8_t n);
 
+	uint8_t cpu_get_int_flags();
+	void cpu_set_int_flags(uint8_t value);
+
 	typedef struct
 	{
 		union
@@ -71,13 +74,11 @@ private:
 
 	//CPU State
 	cpu_registers regs;
-	uint8_t ie_register;
 	bool halted = false;
 	bool stepping = false;
 	bool int_master_enabled = false;
 	bool enabling_ime;
-	uint8_t ie_register;
-	uint8_t int_flags;
+
 
 	//current instruction parameters
 	uint16_t fetched_data = 0;
@@ -104,6 +105,9 @@ private:
 		IT_SERIAL = 8,
 		IT_JOYPAD = 16
 	} interrupt_type;
+
+	uint8_t ie_register;
+	uint8_t int_flags;
 
 	void cpu_request_interrupt(interrupt_type t);
 	void cpu_handle_interrupts();
