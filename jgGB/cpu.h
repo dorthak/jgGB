@@ -64,9 +64,20 @@ public:
 
 private:
 
+	//connections to other classes
 	bus* b;
 	emu* e;
 	stack* s;
+
+	//CPU State
+	cpu_registers regs;
+	uint8_t ie_register;
+	bool halted = false;
+	bool stepping = false;
+	bool int_master_enabled = false;
+	bool enabling_ime;
+	uint8_t ie_register;
+	uint8_t int_flags;
 
 	//current instruction parameters
 	uint16_t fetched_data = 0;
@@ -83,6 +94,21 @@ private:
 	void (cpu::* a_mode)(void) = NULL;
 	void (cpu::*inst)(void) = NULL;
 
+
+	//Interrupt data
+
+	typedef enum {
+		IT_VBLANK = 1,
+		IT_LCD_STAT = 2,
+		IT_TIMER = 4,
+		IT_SERIAL = 8,
+		IT_JOYPAD = 16
+	} interrupt_type;
+
+	void cpu_request_interrupt(interrupt_type t);
+	void cpu_handle_interrupts();
+	bool int_check(uint16_t address, interrupt_type it);
+	void int_handle(uint16_t address);
 
 	// Address mode functions
 	void fAM_IMP();
@@ -139,21 +165,12 @@ private:
 	void fIN_RLA();
 	void fIN_STOP();
 	void fIN_HALT();
-
+	void fIN_DAA();
+	void fIN_CPL();
+	void fIN_SCF();
+	void fIN_CCF();
+	void fIN_EI();
 	void fIN_RETI();
-	//registers
-
-
-
-
-	cpu_registers regs;
-	//instruction* cur_inst = 0;
-
-	uint8_t ie_register;
-
-	bool halted = false;
-	bool stepping = false;
-	bool int_master_enabled = false;
 
 	uint16_t cpu_read_reg(instdata::reg_type rt);
 	void cpu_set_reg(instdata::reg_type rt, uint16_t val);

@@ -497,3 +497,41 @@ void cpu::fIN_HALT()
 {
     halted = true;
 }
+
+void cpu::fIN_DAA()
+{
+    uint8_t u = 0;
+    int cf = 0;
+
+    if (CPU_FLAG_H || (!CPU_FLAG_N && (regs.A & 0xF) > 0x09))
+    {
+        u = 0x06;
+    }
+    if (CPU_FLAG_C || (!CPU_FLAG_N && regs.A > 0x99))
+    {
+        u |= 0x60;
+        cf = 1;
+    }
+
+    regs.A += CPU_FLAG_N ? -u : u;
+
+    cpu_set_flags(regs.A == 0, -1, 0, cf);
+}
+void cpu::fIN_CPL()
+{
+    regs.A = ~regs.A;
+    cpu_set_flags(-1, 1, 1, -1);
+}
+void cpu::fIN_SCF()
+{
+    cpu_set_flags(-1, 0, 0, 1);
+}
+void cpu::fIN_CCF()
+{
+    cpu_set_flags(-1, 0, 0, CPU_FLAG_C ^ 1);
+}
+
+void cpu::fIN_EI()
+{
+    enabling_ime = true;
+}
