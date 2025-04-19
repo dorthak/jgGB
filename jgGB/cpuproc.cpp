@@ -204,3 +204,9 @@ void cpu::fIN_RET()
     }
     
 }
+
+void cpu::fIN_RST()
+{
+    goto_addr(param, true);
+}
+

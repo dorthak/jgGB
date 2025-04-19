@@ -121,6 +121,7 @@ private:
 	void fIN_JR();
 	void fIN_CALL();
 	void fIN_RET();
+	void fIN_RST();
 	void fIN_DEC();
 	void fIN_INC();
 	void fIN_XOR();
