@@ -266,3 +266,16 @@ void cpu::fIN_ADC()
         (a & 0xF) + (u & 0xF) + c > 0xF,
         a + u + c > 0xFF);
 }
+
+void cpu::fIN_SUB()
+{
+    uint16_t val = cpu_read_reg(reg_1) - fetched_data;
+
+    int z = val == 0;
+    int h = ((int)cpu_read_reg(reg_1) & 0xF) - ((int)fetched_data & 0xF) < 0;
+    int c = ((int)cpu_read_reg(reg_1)) - ((int)fetched_data) < 0;
+
+    cpu_set_reg(reg_1, val);
+    
+    cpu_set_flags(z, 1, h, c);
+}

@@ -126,6 +126,7 @@ private:
 	void fIN_INC();
 	void fIN_ADD();
 	void fIN_ADC();
+	void fIN_SUB();
 
 	void fIN_RETI();
 	void fIN_XOR();
