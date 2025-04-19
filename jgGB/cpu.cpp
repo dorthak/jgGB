@@ -337,7 +337,7 @@ void cpu::fetch_instruction()
     case 0xDB: break;
     case 0xDC: ILINE(IN_CALL,   AM_D16,     RT_NONE,    RT_NONE, CT_C,          0)
     case 0xDD: break;
-    case 0xDE: ILINE(IN_SBC,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0)  //CHECK
+    case 0xDE: ILINE(IN_SBC,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0)  
     case 0xDF: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x18)
 
     // Ex
