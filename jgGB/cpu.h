@@ -127,7 +127,7 @@ private:
 	void fIN_ADD();
 	void fIN_ADC();
 	void fIN_SUB();
-
+	void fIN_SBC();
 	void fIN_RETI();
 	void fIN_XOR();
 

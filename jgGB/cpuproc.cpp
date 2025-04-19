@@ -279,3 +279,20 @@ void cpu::fIN_SUB()
     
     cpu_set_flags(z, 1, h, c);
 }
+
+
+void cpu::fIN_SBC()
+{
+    uint16_t val = fetched_data + CPU_FLAG_C;
+
+    int z = cpu_read_reg(reg_1) - val == 0;
+
+    int h = ((int)cpu_read_reg(reg_1) & 0xF) 
+        - ((int)fetched_data & 0xF) - ((int)CPU_FLAG_C) < 0;
+    int c = ((int)cpu_read_reg(reg_1)) 
+        - ((int)fetched_data) - ((int)CPU_FLAG_C) < 0;
+
+    cpu_set_reg(reg_1, cpu_read_reg(reg_1) - val);
+
+    cpu_set_flags(z, 1, h, c);
+}
