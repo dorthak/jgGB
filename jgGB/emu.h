@@ -6,6 +6,8 @@
 #include "ram.h"
 #include "stack.h"
 #include "ui.h"
+#include "io.h"
+#include "timer.h"
 
 class cpu;
 
@@ -33,6 +35,8 @@ private:
 	ram* r;
 	stack* s;
 	ui* u;
+	io* i;
+	timer* t;
 	
 	bool die;
 	bool paused;

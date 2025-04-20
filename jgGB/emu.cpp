@@ -22,9 +22,13 @@ emu::emu()
 	c = new cpu(b, this, s);
 	r = new ram();
 	u = new ui(this);
+	i = new io(b);
+	t = new timer(b);
 	b->set_cpu(c);
 	b->set_ram(r);
 	s->set_cpu(c);
+	b->set_io(i);
+	
 }
 
 emu::~emu()
@@ -91,6 +95,12 @@ int emu::emu_run()
 void emu::emu_cycles(int cpu_cycles)
 {
 	//TODO
+	int n = cpu_cycles * 4;
+	for (int i = 0; i < n; i++)
+	{
+		ticks++;
+		b->bus_timer_tick();
+	}
 }
 
 uint64_t emu::get_ticks()
@@ -123,8 +133,7 @@ void emu::run_cpu()
 			return;
 		}
 
-		ticks++;
-
+		
 		if (die)
 		{
 			return;
