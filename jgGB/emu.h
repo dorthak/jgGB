@@ -8,6 +8,7 @@
 #include "ui.h"
 #include "io.h"
 #include "timer.h"
+#include "dbg.h"
 
 class cpu;
 
@@ -37,6 +38,7 @@ private:
 	ui* u;
 	io* i;
 	timer* t;
+	dbg* d;
 	
 	bool die;
 	bool paused;

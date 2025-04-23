@@ -3,6 +3,7 @@
 #include "cpu.h"
 #include "io.h"
 #include "timer.h"
+#include "dbg.h"
 // 0x0000 - 0x3FFF : ROM Bank 0
 // 0x4000 - 0x7FFF : ROM Bank 1 - Switchable
 // 0x8000 - 0x97FF : CHR RAM
@@ -38,7 +39,7 @@ uint8_t bus::bus_read(uint16_t address)
 	else if (address < 0xA000) {
 		//Char/Map Data
 		//TODO
-		printf("UNSUPPORTED bus_read(%04X)\n", address);
+		//printf("UNSUPPORTED bus_read(%04X)\n", address);
 		//NO_IMPL
 		return 0;
 	} else if (address < 0xC000) {
@@ -53,7 +54,7 @@ uint8_t bus::bus_read(uint16_t address)
 	} else if (address < 0xFEA0) {
 		//OAM
 		//TODO
-		printf("UNSUPPORTED bus_read(%04X)\n", address);
+		//printf("UNSUPPORTED bus_read(%04X)\n", address);
 		//NO_IMPL
 		return 0;
 	} else if (address < 0xFF00) {
@@ -98,7 +99,7 @@ void bus::bus_write(uint16_t address, uint8_t value)
 	else if (address < 0xA000) {
 		//Char/Map Data
 		//TODO
-		printf("UNSUPPORTED bus_write(%04X)\n", address);
+		//printf("UNSUPPORTED bus_write(%04X)\n", address);
 		//NO_IMPL
 	} else if (address < 0xC000) {
 		//Cartridge RAM
@@ -112,7 +113,7 @@ void bus::bus_write(uint16_t address, uint8_t value)
 	} else if (address < 0xFEA0) {
 		//OAM
 		//TODO
-		printf("UNSUPPORTED bus_write(%04X)\n", address);
+		//printf("UNSUPPORTED bus_write(%04X)\n", address);
 		//NO_IMPL
 	} else if (address < 0xFF00) {
 		//reserved unsuable
@@ -164,6 +165,10 @@ void bus::set_timer(timer* t)
 {
 	this->t = t;
 }
+void bus::set_debug(dbg* d)
+{
+	this->d = d;
+}
 
 uint8_t bus::bus_get_cpu_int_flags()
 {
@@ -188,4 +193,18 @@ void bus::bus_timer_write(uint16_t address, uint8_t value)
 void bus::bus_timer_tick()
 {
 	t->timer_tick();
+}
+
+void bus::bus_request_cpu_interrupt(instdata::interrupt_type t)
+{
+	c->cpu_request_interrupt(t);
+}
+
+void bus::bus_dbg_update()
+{
+	d->dbg_update();
+}
+void bus::bus_dbg_print()
+{
+	d->dbg_print();
 }

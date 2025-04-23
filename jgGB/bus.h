@@ -1,11 +1,14 @@
 #pragma once
 #include "common.h"
 #include "cart.h"
+#include "instdata.h"
 
 class cpu;
 class ram;
 class io;
 class timer;
+class dbg;
+
 
 class bus
 {
@@ -21,13 +24,19 @@ public:
 	void set_cpu(cpu* c);
 	void set_io(io* i);
 	void set_timer(timer* t);
+	void set_debug(dbg* d);
 
 	//bus passing messages between its members
 	uint8_t bus_get_cpu_int_flags();
 	void bus_set_cpu_int_flags(uint8_t value);
+	void bus_request_cpu_interrupt(instdata::interrupt_type t);
+
 	uint8_t bus_timer_read(uint16_t  address);
 	void bus_timer_write(uint16_t address, uint8_t value);
 	void bus_timer_tick();
+
+	void bus_dbg_update();
+	void bus_dbg_print();
 
 private:
 	cart* crt;
@@ -35,6 +44,6 @@ private:
 	cpu* c;
 	io* i;
 	timer* t;
-
+	dbg* d;
 };
 

@@ -1,11 +1,16 @@
 #include "common.h"
 #include "cpu.h"
+#include "emu.h"
 
 
 cpu::cpu(bus* b, emu* e, stack* s)
 {
     this->regs.PC = 0x100;
-    this->regs.A = 0x01;
+    this->regs.AF = 0x01B0;
+    this->regs.BC = 0x00013;
+    this->regs.DE = 0x00D8;
+    this->regs.AF = 0x01B0;
+    this->regs.SP = 0xFFFE;
     this->b = b;
     this->e = e;
     this->s = s;
@@ -53,10 +58,35 @@ bool cpu::cpu_step() {
             printf("Unknown Instruction! %02X\n", (uint8_t)cur_opcode);
             return false;
         }
+
+        b->bus_dbg_update();
+        b->bus_dbg_print();
+
+
         if (!(execute()))
         {
             return false;
         }
+
+    } else {
+        //is halted
+        e->emu_cycles(1);
+
+        if (int_flags)
+        {
+            halted = false;
+        }
+    }
+
+    if (int_master_enabled)
+    {
+        cpu_handle_interrupts();
+        enabling_ime = false;
+    }
+
+    if (enabling_ime)
+    {
+        int_master_enabled = true;
     }
 
     return true;
@@ -353,7 +383,7 @@ void cpu::fetch_instruction()
     case 0xE3: break;
     case 0xE4: break;
     case 0xE5: ILINE(IN_PUSH,   AM_R,       RT_HL,      RT_NONE, CT_NONE,       0)
-    case 0xE6: ILINE(IN_XOR,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0) 
+    case 0xE6: ILINE(IN_AND,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0) 
     case 0xE7: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x20)
     case 0xE8: ILINE(IN_ADD,    AM_R_D8,    RT_SP,      RT_NONE, CT_NONE,       0)
     case 0xE9: ILINE(IN_JP,     AM_MR,      RT_HL,      RT_NONE, CT_NONE,       0)
@@ -457,8 +487,8 @@ void cpu::cpu_set_reg(instdata::reg_type rt, uint16_t val)
         case instdata::RT_DE: regs.DE = val; break;
         case instdata::RT_HL: regs.HL = val; break;
         case instdata::RT_SP: regs.SP = val; break;
-        case instdata::RT_AF: regs.SP = val; break;
-        case instdata::RT_PC: regs.SP = val; break;
+        case instdata::RT_AF: regs.AF = val; break;
+        case instdata::RT_PC: regs.PC = val; break;
         case instdata::RT_NONE: break;
         default:
             std::cout << "Invalid register for DEC instruction." << std::endl; exit(-9); break;
@@ -555,7 +585,7 @@ instdata::reg_type cpu::decode_reg(uint8_t reg) const
 }
 
 
-bool cpu::int_check(uint16_t address, interrupt_type it)
+bool cpu::int_check(uint16_t address, instdata::interrupt_type it)
 {
     if ((int_flags & it) && (ie_register & it))
     {
@@ -576,7 +606,7 @@ void cpu::int_handle(uint16_t address)
     regs.PC = address;
 }
 
-void cpu::cpu_request_interrupt(interrupt_type t)
+void cpu::cpu_request_interrupt(instdata::interrupt_type t)
 {
     //TODO
     NO_IMPL
@@ -584,19 +614,19 @@ void cpu::cpu_request_interrupt(interrupt_type t)
 
 void cpu::cpu_handle_interrupts()
 {
-    if (int_check(0x40, IT_VBLANK)) {
+    if (int_check(0x40, instdata::IT_VBLANK)) {
         return;
     }
-    if (int_check(0x48, IT_LCD_STAT)) {
+    if (int_check(0x48, instdata::IT_LCD_STAT)) {
         return;
     }
-    if (int_check(0x50, IT_TIMER)) {
+    if (int_check(0x50, instdata::IT_TIMER)) {
         return;
     }
-    if (int_check(0x58, IT_SERIAL)) {
+    if (int_check(0x58, instdata::IT_SERIAL)) {
         return;
     }
-    if (int_check(0x60, IT_JOYPAD)) {
+    if (int_check(0x60, instdata::IT_JOYPAD)) {
         return;
     }
 

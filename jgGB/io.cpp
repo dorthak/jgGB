@@ -23,11 +23,12 @@ uint8_t io::io_read(uint16_t address)
 		case 0xFF04:
 		case 0xFF05:
 		case 0xFF06:
-		case 0xFF07: return b->bus_timer_read(address); 
+		case 0xFF07: 
+			return b->bus_timer_read(address); 
 		case 0xFF0F: return b->bus_get_cpu_int_flags(); 
 
 		default:
-			printf("UNSUPPORTED bus_read(%04X)\n", address);
+			//printf("UNSUPPORTED bus_read(%04X)\n", address);
 			return 0;
 
 	}
@@ -41,11 +42,12 @@ void io::io_write(uint16_t address, uint8_t value)
 		case 0xFF04:
 		case 0xFF05:
 		case 0xFF06:
-		case 0xFF07: b->bus_timer_write(address, value); break;
+		case 0xFF07: 
+			b->bus_timer_write(address, value); break;
 		case 0xFF0F: b->bus_set_cpu_int_flags(value); break;
 
 		default:
-			printf("UNSUPPORTED bus_write(%04X)\n", address);
+			//printf("UNSUPPORTED bus_write(%04X)\n", address);
 			return;
 	}
 }

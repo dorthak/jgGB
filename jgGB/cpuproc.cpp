@@ -1,5 +1,6 @@
 #include "common.h"
 #include "cpu.h"
+#include "emu.h"
 
 //Operational functions
 void cpu::fIN_NONE()
@@ -111,7 +112,7 @@ void cpu::fIN_INC()
         return;
     }
 
-    cpu_set_flags(val == 0, 1, (val & 0x0F) == 0x0F, -1);
+    cpu_set_flags(val == 0, 0, (val & 0x0F) == 0x0F, -1);
 
 }
 

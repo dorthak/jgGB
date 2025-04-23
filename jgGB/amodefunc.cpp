@@ -127,7 +127,7 @@ void cpu::fAM_D8()
     std::sprintf(&disassemble_string[0], "%s $%02X", inst_name(type).c_str(), fetched_data & 0xFF);
 }
 
-//TODO: Is this one even used?
+
 void cpu::fAM_D16_R()
 {
     uint16_t lo = b->bus_read(regs.PC);
@@ -155,7 +155,7 @@ void cpu::fAM_A16_R()
 
     fetched_data = cpu_read_reg(reg_2);
 
-    std::sprintf(&disassemble_string[0], "%s ($%04X), %s", inst_name(type).c_str(), fetched_data, rt_string[reg_2].c_str());
+    std::sprintf(&disassemble_string[0], "%s ($%04X), %s", inst_name(type).c_str(), mem_dest, rt_string[reg_2].c_str());
 }
 void cpu::fAM_MR_D8()
 {

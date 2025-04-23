@@ -24,10 +24,14 @@ emu::emu()
 	u = new ui(this);
 	i = new io(b);
 	t = new timer(b);
+	d = new dbg(b);
+	s->set_cpu(c);
+
 	b->set_cpu(c);
 	b->set_ram(r);
-	s->set_cpu(c);
+	b->set_timer(t);
 	b->set_io(i);
+	b->set_debug(d);
 	
 }
 
@@ -133,10 +137,5 @@ void emu::run_cpu()
 			return;
 		}
 
-		
-		if (die)
-		{
-			return;
-		}
 	}
 }

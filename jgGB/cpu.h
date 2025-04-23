@@ -21,6 +21,7 @@ public:
 
 	uint8_t cpu_get_int_flags();
 	void cpu_set_int_flags(uint8_t value);
+	void cpu_request_interrupt(instdata::interrupt_type t);
 
 	typedef struct
 	{
@@ -65,6 +66,7 @@ public:
 		return &regs;
 	}
 
+
 private:
 
 	//connections to other classes
@@ -100,20 +102,11 @@ private:
 
 	//Interrupt data
 
-	typedef enum {
-		IT_VBLANK = 1,
-		IT_LCD_STAT = 2,
-		IT_TIMER = 4,
-		IT_SERIAL = 8,
-		IT_JOYPAD = 16
-	} interrupt_type;
-
 	uint8_t ie_register;
 	uint8_t int_flags;
 
-	void cpu_request_interrupt(interrupt_type t);
 	void cpu_handle_interrupts();
-	bool int_check(uint16_t address, interrupt_type it);
+	bool int_check(uint16_t address, instdata::interrupt_type it);
 	void int_handle(uint16_t address);
 
 	// Address mode functions

@@ -162,6 +162,6 @@ uint8_t cart::cart_read(uint16_t address)
 }
 void cart::cart_write(uint16_t address, uint8_t value)
 {
-    printf("cart_write(%04X)\n", address);
-    NO_IMPL
+    //printf("cart_write(%04X)\n", address);
+    //NO_IMPL
 }
