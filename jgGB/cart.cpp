@@ -35,7 +35,8 @@ bool cart::cart_load(char* cartfilename)
 
         rewind(fp);
 
-        rom_data = (uint8_t*)malloc(rom_size);
+        //rom_data = (uint8_t*)malloc(rom_size);
+        rom_data = new uint8_t[rom_size];
         fread(rom_data, rom_size, 1, fp);
         fclose(fp);
 

@@ -47,7 +47,7 @@ private:
                 
     char filename[1024];                
     uint32_t rom_size;              
-    _Notnull_ uint8_t* rom_data;              
+    uint8_t* rom_data;              
                     
     const std::string ROM_TYPES[0x23] = {             
     "ROM ONLY",             
