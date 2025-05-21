@@ -107,12 +107,12 @@ void cpu::fIN_INC()
         val = cpu_read_reg(reg_1);
     }
 
-    if ((cur_opcode & 0x0B) == 0x0B)
+    if ((cur_opcode & 0x03) == 0x03)
     {
         return;
     }
 
-    cpu_set_flags(val == 0, 0, (val & 0x0F) == 0x0F, -1);
+    cpu_set_flags(val == 0, 0, (val & 0x0F) == 0, -1);
 
 }
 
@@ -255,7 +255,9 @@ void cpu::fIN_ADC()
     uint16_t a = regs.A;
     uint16_t c = CPU_FLAG_C;
 
-    regs.A = (a + u + c) & 0xFF;
+    uint16_t val = (a + u + c);
+
+    cpu_set_reg(reg_1, val);
 
     cpu_set_flags(regs.A == 0, 0,
         (a & 0xF) + (u & 0xF) + c > 0xF,
@@ -300,7 +302,7 @@ void cpu::fIN_XOR()
 
 void cpu::fIN_AND()
 {
-    regs.A &= fetched_data & 0xFF;
+    regs.A &= fetched_data;
     cpu_set_flags((regs.A == 0), 0, 1, 0);
 }
 
@@ -347,7 +349,7 @@ void cpu::fIN_CB()
         return;
     case 3:
         //SET
-        reg_val |= ~(1 << bit);
+        reg_val |= (1 << bit);
         cpu_set_reg(reg, reg_val);
         return;
     }
