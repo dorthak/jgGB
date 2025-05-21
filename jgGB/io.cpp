@@ -27,6 +27,7 @@ uint8_t io::io_read(uint16_t address)
 			return b->bus_timer_read(address); 
 		case 0xFF0F: return b->bus_get_cpu_int_flags(); 
 
+		case 0xFF44: return 0x90;  //TODO: temp, just here to make 01-special go
 		default:
 			//printf("UNSUPPORTED bus_read(%04X)\n", address);
 			return 0;
