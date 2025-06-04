@@ -4,6 +4,7 @@
 #include "io.h"
 #include "timer.h"
 #include "dbg.h"
+#include "ppu.h"
 // 0x0000 - 0x3FFF : ROM Bank 0
 // 0x4000 - 0x7FFF : ROM Bank 1 - Switchable
 // 0x8000 - 0x97FF : CHR RAM
@@ -38,10 +39,7 @@ uint8_t bus::bus_read(uint16_t address)
 	}
 	else if (address < 0xA000) {
 		//Char/Map Data
-		//TODO
-		//printf("UNSUPPORTED bus_read(%04X)\n", address);
-		//NO_IMPL
-		return 0;
+		return p->ppu_vram_read(address);
 	} else if (address < 0xC000) {
 		//Cartridge RAM
 		return crt->cart_read(address);
@@ -50,26 +48,24 @@ uint8_t bus::bus_read(uint16_t address)
 		return r->wram_read(address);
 	} else if (address < 0xFE00) {
 		//reserved echo ram
-		return 0;
+//		return 0;
+		//TODO: Let's try it.
+		return r->wram_read(address - 0x2000);
 	} else if (address < 0xFEA0) {
 		//OAM
 		//TODO
 		//printf("UNSUPPORTED bus_read(%04X)\n", address);
 		//NO_IMPL
-		return 0;
+		return p->ppu_oam_read(address);
 	} else if (address < 0xFF00) {
 		//reserved unsuable
 		return 0;
 	} else if (address < 0xFF80) {
 		//IO Registers...
-		//TODO
-		//printf("UNSUPPORTED bus_read(%04X)\n", address);
-		//NO_IMPL
 		return i->io_read(address);
 		
 	} else if (address == 0xFFFF) {
 		//CPU ENABLE REGISTER
-		//TODO
 		return c->cpu_get_ie_register();
 	} else {
 		return r->hram_read(address);
@@ -98,9 +94,7 @@ void bus::bus_write(uint16_t address, uint8_t value)
 	}
 	else if (address < 0xA000) {
 		//Char/Map Data
-		//TODO
-		//printf("UNSUPPORTED bus_write(%04X)\n", address);
-		//NO_IMPL
+		p->ppu_vram_write(address, value);
 	} else if (address < 0xC000) {
 		//Cartridge RAM
 		crt->cart_write(address, value);
@@ -109,12 +103,16 @@ void bus::bus_write(uint16_t address, uint8_t value)
 		r->wram_write(address, value);
 	} else if (address < 0xFE00) {
 		//reserved echo ram
+
+		//TODO let's try anyway:
+		r->wram_write(address - 0x2000, value);
 		
 	} else if (address < 0xFEA0) {
 		//OAM
 		//TODO
 		//printf("UNSUPPORTED bus_write(%04X)\n", address);
 		//NO_IMPL
+		p->ppu_oam_write(address, value);
 	} else if (address < 0xFF00) {
 		//reserved unsuable
 	} else if (address < 0xFF80) {
@@ -168,6 +166,10 @@ void bus::set_timer(timer* t)
 void bus::set_debug(dbg* d)
 {
 	this->d = d;
+}
+void bus::set_ppu(ppu* p)
+{
+	this->p = p;
 }
 
 uint8_t bus::bus_get_cpu_int_flags()

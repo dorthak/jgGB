@@ -3,6 +3,7 @@
 cart::cart()
 {
     init_lic_code();
+    rom_data = nullptr;
 }
 
 cart::~cart()
@@ -44,6 +45,7 @@ bool cart::cart_load(char* cartfilename)
         header->title[15] = 0;
 
         printf("Cartridge Loaded:\n");
+        printf("%s\n", filename);
         printf("\t Title    : %s\n", header->title);
         printf("\t Type     : %2.2X (%s)\n", header->type, cart_type_name().c_str());
         printf("\t ROM Size : %d KB\n", 32 << header->rom_size);
@@ -57,6 +59,17 @@ bool cart::cart_load(char* cartfilename)
 
     return cartloaded;
 
+}
+
+void cart::cartFake(int size)
+{
+    rom_size = size;
+    if (rom_data == nullptr)
+    {
+        rom_data = new uint8_t[rom_size];
+        cartloaded = true;
+
+    }
 }
 
 void cart::init_lic_code()
@@ -165,4 +178,5 @@ void cart::cart_write(uint16_t address, uint8_t value)
 {
     //printf("cart_write(%04X)\n", address);
     //NO_IMPL
+    rom_data[address] = value;
 }

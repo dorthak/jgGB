@@ -8,6 +8,7 @@ class ram;
 class io;
 class timer;
 class dbg;
+class ppu;
 
 
 class bus
@@ -25,6 +26,7 @@ public:
 	void set_io(io* i);
 	void set_timer(timer* t);
 	void set_debug(dbg* d);
+	void set_ppu(ppu* p);
 
 	//bus passing messages between its members
 	uint8_t bus_get_cpu_int_flags();
@@ -45,5 +47,6 @@ private:
 	io* i;
 	timer* t;
 	dbg* d;
+	ppu* p;
 };
 

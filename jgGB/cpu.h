@@ -9,6 +9,8 @@
 
 //forward declare class to avoid loop
 
+class SST;
+
 class cpu
 {
 public:
@@ -173,6 +175,8 @@ private:
 
 	uint16_t cpu_read_reg(instdata::reg_type rt);
 	void cpu_set_reg(instdata::reg_type rt, uint16_t val);
+	uint8_t cpu_read_reg8(instdata::reg_type rt);
+	void cpu_set_reg8(instdata::reg_type rt, uint8_t val);
 
 	void fetch_instruction();
 	bool fetch_data();
@@ -275,6 +279,8 @@ private:
 		instdata::RT_HL,
 		instdata::RT_A
 	};
+
+	friend class SST;
 
 };
 

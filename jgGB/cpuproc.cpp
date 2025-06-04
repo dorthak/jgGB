@@ -281,15 +281,16 @@ void cpu::fIN_SUB()
 void cpu::fIN_SBC()
 {
     uint16_t val = fetched_data + CPU_FLAG_C;
+    uint16_t regVal = cpu_read_reg(reg_1);
 
-    int z = cpu_read_reg(reg_1) - val == 0;
+    int z = regVal - val == 0;
 
-    int h = ((int)cpu_read_reg(reg_1) & 0xF) 
+    int h = ((int)regVal & 0xF)
         - ((int)fetched_data & 0xF) - ((int)CPU_FLAG_C) < 0;
-    int c = ((int)cpu_read_reg(reg_1)) 
+    int c = ((int)regVal)
         - ((int)fetched_data) - ((int)CPU_FLAG_C) < 0;
 
-    cpu_set_reg(reg_1, cpu_read_reg(reg_1) - val);
+    cpu_set_reg(reg_1, regVal - val);
 
     cpu_set_flags(z, 1, h, c);
 }
@@ -327,7 +328,7 @@ void cpu::fIN_CB()
 
     uint8_t bit = (op >> 3) & 0b111;
     uint8_t bit_op = (op >> 6) & 0b11;
-    uint8_t reg_val = (uint8_t) cpu_read_reg(reg);
+    uint8_t reg_val = (uint8_t) cpu_read_reg8(reg);
 
     e->emu_cycles(1);
 
@@ -345,12 +346,12 @@ void cpu::fIN_CB()
     case 2:
         //RES
         reg_val &= ~(1 << bit);
-        cpu_set_reg(reg, reg_val);
+        cpu_set_reg8(reg, reg_val);
         return;
     case 3:
         //SET
         reg_val |= (1 << bit);
-        cpu_set_reg(reg, reg_val);
+        cpu_set_reg8(reg, reg_val);
         return;
     }
 
@@ -369,7 +370,7 @@ void cpu::fIN_CB()
                 result |= 1;
                 setC = true;
             }
-            cpu_set_reg(reg, result);
+            cpu_set_reg8(reg, result);
             cpu_set_flags(result == 0, 0, 0, setC);
             return;
         }
@@ -380,7 +381,7 @@ void cpu::fIN_CB()
             reg_val >>= 1;
             reg_val |= (old << 7);
 
-            cpu_set_reg(reg, reg_val);
+            cpu_set_reg8(reg, reg_val);
             cpu_set_flags(!reg_val, 0, 0, old & 1);
             return;
         }
@@ -391,7 +392,7 @@ void cpu::fIN_CB()
             reg_val <<= 1;
             reg_val |= (uint8_t)flagC;
 
-            cpu_set_reg(reg, reg_val);
+            cpu_set_reg8(reg, reg_val);
             cpu_set_flags(!reg_val, 0, 0, !!(old & 0x80));
             return;
         }
@@ -402,7 +403,7 @@ void cpu::fIN_CB()
             reg_val >>= 1;
             reg_val |= (flagC << 7);
 
-            cpu_set_reg(reg, reg_val);
+            cpu_set_reg8(reg, reg_val);
             cpu_set_flags(!reg_val, 0, 0, old & 1);
             return;
         }
@@ -413,7 +414,7 @@ void cpu::fIN_CB()
             reg_val <<= 1;
 
 
-            cpu_set_reg(reg, reg_val);
+            cpu_set_reg8(reg, reg_val);
             cpu_set_flags(!reg_val, 0, 0, !!(old & 0x80));
             return;
         }
@@ -422,7 +423,7 @@ void cpu::fIN_CB()
             //SRA
             uint8_t u = (int8_t)reg_val >> 1;
 
-            cpu_set_reg(reg, u);
+            cpu_set_reg8(reg, u);
             cpu_set_flags(!u, 0, 0, reg_val & 1);
             return;
         }
@@ -431,7 +432,7 @@ void cpu::fIN_CB()
             //SWAP
             reg_val = ((reg_val & 0xF0) >> 4) | ((reg_val & 0x0F) << 4);
 
-            cpu_set_reg(reg, reg_val);
+            cpu_set_reg8(reg, reg_val);
             cpu_set_flags(reg_val == 0, 0, 0, 0);
             return;
         }
@@ -440,7 +441,7 @@ void cpu::fIN_CB()
             //SRL
             uint8_t u = reg_val >> 1;
 
-            cpu_set_reg(reg, u);
+            cpu_set_reg8(reg, u);
             cpu_set_flags(!u, 0, 0, reg_val & 1);
             return;
         }

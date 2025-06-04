@@ -7,6 +7,8 @@
 #include <SDL3_ttf/SDL_ttf.h>
 
 
+//forward declare class
+class SST;
 
 
 emu::emu()
@@ -25,21 +27,31 @@ emu::emu()
 	i = new io(b);
 	t = new timer(b);
 	d = new dbg(b);
-	s->set_cpu(c);
+	p = new ppu();
 
+	s->set_cpu(c);
 	b->set_cpu(c);
 	b->set_ram(r);
 	b->set_timer(t);
 	b->set_io(i);
 	b->set_debug(d);
+	b->set_ppu(p);
 	
 }
 
 emu::~emu()
 {
 	delete(c);
+	delete(s);
 	delete(crt);
 	delete(b);
+	delete(p);
+	delete(d);
+	delete(t);
+	delete(i);
+	delete(u);
+	delete(r);
+
 
 }
 

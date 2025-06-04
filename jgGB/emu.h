@@ -9,6 +9,7 @@
 #include "io.h"
 #include "timer.h"
 #include "dbg.h"
+#include "ppu.h"
 
 class cpu;
 
@@ -39,6 +40,7 @@ private:
 	io* i;
 	timer* t;
 	dbg* d;
+	ppu* p;
 	
 	bool die;
 	bool paused;
@@ -46,5 +48,6 @@ private:
 	uint64_t ticks;
 
 	void run_cpu();
+	friend class SST;
 };
 

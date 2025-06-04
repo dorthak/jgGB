@@ -7,10 +7,11 @@ cpu::cpu(bus* b, emu* e, stack* s)
 {
     this->regs.PC = 0x100;
     this->regs.AF = 0x01B0;
-    this->regs.BC = 0x00013;
+    this->regs.BC = 0x0013;
     this->regs.DE = 0x00D8;
     this->regs.AF = 0x01B0;
     this->regs.SP = 0xFFFE;
+    this->regs.HL = 0x014D;
     this->b = b;
     this->e = e;
     this->s = s;
@@ -47,11 +48,11 @@ bool cpu::cpu_step() {
         );
 
 
-        printf("%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
-            (unsigned long)e->get_ticks(),
-            pc, disassemble_string.c_str(), cur_opcode,
-            b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
-            regs.D, regs.E, regs.H, regs.L, regs.SP);
+        //printf("%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
+        //    (unsigned long)e->get_ticks(),
+        //    pc, disassemble_string.c_str(), cur_opcode,
+        //    b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
+        //    regs.D, regs.E, regs.H, regs.L, regs.SP);
 
         if (inst == NULL)
         {
@@ -181,13 +182,13 @@ void cpu::fetch_instruction()
     case 0x32: ILINE(IN_LD,     AM_HLD_R,   RT_HL,      RT_A,    CT_NONE,       0)
     case 0x33: ILINE(IN_INC,    AM_R,       RT_SP,      RT_NONE, CT_NONE,       0)
     case 0x34: ILINE(IN_INC,    AM_MR,      RT_HL,      RT_NONE, CT_NONE,       0)
-    case 0x35: ILINE(IN_DEC,    AM_R,       RT_BC,      RT_NONE, CT_NONE,       0)
+    case 0x35: ILINE(IN_DEC,    AM_MR,      RT_HL,      RT_NONE, CT_NONE,       0)
     case 0x36: ILINE(IN_LD,     AM_MR_D8,   RT_HL,      RT_NONE, CT_NONE,       0)
     case 0x37: ILINE(IN_SCF,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,       0)
     case 0x38: ILINE(IN_JR,     AM_D8,      RT_NONE,    RT_NONE, CT_C,          0)
     case 0x39: ILINE(IN_ADD,    AM_R_R,     RT_HL,      RT_SP,   CT_NONE,       0)
     case 0x3A: ILINE(IN_LD,     AM_R_HLD,   RT_A,       RT_HL,   CT_NONE,       0)
-    case 0x3B: ILINE(IN_DEC,    AM_MR,      RT_HL,      RT_NONE, CT_NONE,       0)
+    case 0x3B: ILINE(IN_DEC,    AM_R,       RT_SP,      RT_NONE, CT_NONE,       0)
     case 0x3C: ILINE(IN_INC,    AM_R,       RT_A,       RT_NONE, CT_NONE,       0)
     case 0x3D: ILINE(IN_DEC,    AM_R,       RT_A,       RT_NONE, CT_NONE,       0)
     case 0x3E: ILINE(IN_LD,     AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0)
@@ -386,7 +387,7 @@ void cpu::fetch_instruction()
     case 0xE6: ILINE(IN_AND,    AM_R_D8,    RT_A,       RT_NONE, CT_NONE,       0) 
     case 0xE7: ILINE(IN_RST,    AM_IMP,     RT_NONE,    RT_NONE, CT_NONE,    0x20)
     case 0xE8: ILINE(IN_ADD,    AM_R_D8,    RT_SP,      RT_NONE, CT_NONE,       0)
-    case 0xE9: ILINE(IN_JP,     AM_MR,      RT_HL,      RT_NONE, CT_NONE,       0)
+    case 0xE9: ILINE(IN_JP,     AM_R,       RT_HL,      RT_NONE, CT_NONE,       0)
     case 0xEA: ILINE(IN_LD,     AM_A16_R,   RT_NONE,    RT_A,    CT_NONE,       0)
     case 0xEB: break;
     case 0xEC: break;
@@ -458,12 +459,12 @@ uint16_t cpu::cpu_read_reg(instdata::reg_type rt)
         case instdata::RT_E: return regs.E;
         case instdata::RT_H: return regs.H;
         case instdata::RT_L: return regs.L;
-         
+
         case instdata::RT_AF: return regs.AF;
         case instdata::RT_BC: return regs.BC;
         case instdata::RT_DE: return regs.DE;
         case instdata::RT_HL: return regs.HL;
-         
+
         case instdata::RT_PC: return regs.PC;
         case instdata::RT_SP: return regs.SP;
 
@@ -494,6 +495,46 @@ void cpu::cpu_set_reg(instdata::reg_type rt, uint16_t val)
             std::cout << "Invalid register for DEC instruction." << std::endl; exit(-9); break;
     }
 }
+
+uint8_t cpu::cpu_read_reg8(instdata::reg_type rt)
+{
+    switch (rt)
+    {
+        case instdata::RT_A: return regs.A;
+        case instdata::RT_F: return regs.Fr;
+        case instdata::RT_B: return regs.B;
+        case instdata::RT_C: return regs.C;
+        case instdata::RT_D: return regs.D;
+        case instdata::RT_E: return regs.E;
+        case instdata::RT_H: return regs.H;
+        case instdata::RT_L: return regs.L;
+
+        case instdata::RT_HL: return b->bus_read(cpu_read_reg(instdata::RT_HL));
+
+
+        default: return 0;
+    }
+}
+
+void cpu::cpu_set_reg8(instdata::reg_type rt, uint8_t val)
+{
+    switch (rt)
+    {
+        case instdata::RT_A: regs.A = val & 0xFF; break;
+        case instdata::RT_F: regs.Fr = val & 0xFF; break;
+        case instdata::RT_B: regs.B = val & 0xFF; break;
+        case instdata::RT_C: regs.C = val & 0xFF; break;
+        case instdata::RT_D: regs.D = val & 0xFF; break;
+        case instdata::RT_E: regs.E = val & 0xFF; break;
+        case instdata::RT_H: regs.H = val & 0xFF; break;
+        case instdata::RT_L: regs.L = val & 0xFF; break;
+        case instdata::RT_HL: b->bus_write(cpu_read_reg(instdata::RT_HL), (uint8_t)val); break;
+        case instdata::RT_NONE: break;
+        default:
+            std::cout << "Invalid register for DEC instruction." << std::endl; exit(-9); break;
+    }
+}
+
 
 std::string cpu::inst_name(instdata::in_type t)
 {
@@ -609,7 +650,7 @@ void cpu::int_handle(uint16_t address)
 void cpu::cpu_request_interrupt(instdata::interrupt_type t)
 {
     //TODO
-    NO_IMPL
+    int_flags |= t;
 }
 
 void cpu::cpu_handle_interrupts()

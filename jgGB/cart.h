@@ -1,6 +1,8 @@
 #pragma once
 #include "common.h"
 
+//forward declare
+class SST;
 
 
 class cart
@@ -47,7 +49,7 @@ private:
                 
     char filename[1024];                
     uint32_t rom_size;              
-    uint8_t* rom_data;              
+    uint8_t* rom_data;
                     
     const std::string ROM_TYPES[0x23] = {             
     "ROM ONLY",             
@@ -89,7 +91,9 @@ private:
                 
     std::string LIC_CODE[0xA5];
 
-
+    //used for testing without a real cart
+    void cartFake(int size);
+    friend class SST;
 
 
 };
