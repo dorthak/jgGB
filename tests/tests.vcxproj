@@ -80,6 +80,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>E:\prog\jgGB\jgGB;E:\prog\SDL\SDL3-3.2.10\include;E:\prog\SDL\SDL3_ttf-3.2.2\include</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>26437;26817;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -97,6 +99,8 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>E:\prog\jgGB\jgGB;E:\prog\SDL\SDL3-3.2.10\include;E:\prog\SDL\SDL3_ttf-3.2.2\include</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>26437;26817;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -114,6 +118,8 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>E:\prog\jgGB\jgGB;E:\prog\SDL\SDL3-3.2.10\include;E:\prog\SDL\SDL3_ttf-3.2.2\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <DisableSpecificWarnings>26437;26817;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,6 +139,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>E:\prog\jgGB\jgGB;E:\prog\SDL\SDL3-3.2.10\include;E:\prog\SDL\SDL3_ttf-3.2.2\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <DisableSpecificWarnings>26437;26817;26495;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +153,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="checkgbe.cpp" />
+    <ClCompile Include="simdjson.cpp" />
+    <ClCompile Include="SST.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\jgGB\jgGB.vcxproj">
@@ -153,6 +163,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="simdjson.h" />
+    <ClInclude Include="SST.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
