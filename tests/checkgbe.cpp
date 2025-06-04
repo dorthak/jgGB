@@ -15,19 +15,30 @@
 #include <catch.hpp>
 
 
-TEST_CASE("Test 9E", "[cpu]") {
-	SST sst = SST("E:/prog/gbTests/9e.json");
-	emu e = emu();
-	auto i = GENERATE(range(0, 1000));
-	std::cout << "Test row: " << sst.tests[i].name << " i = " << i << std::endl;
-	sst.SetSSTState(&e, i);
-	sst.AdvanceCPU(&e);
-	sst.CheckSSTState(&e, i);
+//TEST_CASE("Test 9E", "[cpu]") {
+//	SST sst = SST("E:/prog/gbTests/9e.json");
+//	emu e = emu();
+//	auto i = GENERATE(range(0, 1000));
+//	std::cout << "Test row: " << sst.tests[i].name << " i = " << i << std::endl;
+//	sst.SetSSTState(&e, i);
+//	sst.AdvanceCPU(&e);
+//	sst.CheckSSTState(&e, i);
+//
+//}
 
-}
+//TEST_CASE("Test DE", "[cpu]") {
+//	SST sst = SST("E:/prog/gbTests/de.json");
+//	emu e = emu();
+//	auto i = GENERATE(range(0, 1000));
+//	std::cout << "Test row: " << sst.tests[i].name << " i = " << i << std::endl;
+//	sst.SetSSTState(&e, i);
+//	sst.AdvanceCPU(&e);
+//	sst.CheckSSTState(&e, i);
+//
+//}
 
-TEST_CASE("Test DE", "[cpu]") {
-	SST sst = SST("E:/prog/gbTests/de.json");
+TEST_CASE("Test 98", "[cpu]") {
+	SST sst = SST("E:/prog/gbTests/98.json");
 	emu e = emu();
 	auto i = GENERATE(range(0, 1000));
 	std::cout << "Test row: " << sst.tests[i].name << " i = " << i << std::endl;
