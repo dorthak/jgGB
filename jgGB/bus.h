@@ -9,6 +9,7 @@ class io;
 class timer;
 class dbg;
 class ppu;
+class lcd;
 
 
 class bus
@@ -27,6 +28,7 @@ public:
 	void set_timer(timer* t);
 	void set_debug(dbg* d);
 	void set_ppu(ppu* p);
+	void set_lcd(lcd* l);
 
 	//bus passing messages between its members
 	uint8_t bus_get_cpu_int_flags();
@@ -53,6 +55,8 @@ private:
 	timer* t;
 	dbg* d;
 	ppu* p;
+	lcd* l;
+
 
 	//DMA status
 	bool dma_active;

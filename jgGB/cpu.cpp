@@ -47,12 +47,15 @@ bool cpu::cpu_step() {
             regs.Fr & (1 << 4) ? 'C' : '-'
         );
 
+#ifdef DEBUG_PRINT
 
         printf("%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
             (unsigned long)e->get_ticks(),
             pc, disassemble_string.c_str(), cur_opcode,
             b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
             regs.D, regs.E, regs.H, regs.L, regs.SP);
+#endif
+
 
         if (inst == NULL)
         {

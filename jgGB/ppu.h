@@ -1,17 +1,22 @@
 #pragma once
 #include "common.h"
 
+//forward declare
+class bus;
+class lcd;
+
+
 static const int LINES_PER_FRAME = 154;
 static const int TICKS_PER_LINE = 456;
 static const int YRES = 144;
 static const int XRES = 160;
 
+
 class ppu
 {
 public:
-	ppu();
+	ppu(bus *b, lcd* l);
 	~ppu();
-	void ppu_init();
 	void ppu_tick();
 
 	void ppu_vram_write(uint16_t address, uint8_t value);
@@ -44,9 +49,16 @@ public:
 	} oam_entry;
 
 private:
-	uint32_t* video_buffer;
+//	uint32_t* video_buffer;
+	uint32_t video_buffer[YRES * XRES];
 	uint8_t vram[0x2000];
 
 	oam_entry oam_ram[40];
+	uint32_t current_frame;
+	uint32_t line_ticks;
+
+	bus* b;
+	lcd* l;
+
 };
 

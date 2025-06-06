@@ -27,7 +27,9 @@ emu::emu()
 	i = new io(b);
 	t = new timer(b);
 	d = new dbg(b);
-	p = new ppu();
+	l = new lcd(b);
+	p = new ppu(b, l);
+
 
 	s->set_cpu(c);
 	b->set_cpu(c);
@@ -36,6 +38,7 @@ emu::emu()
 	b->set_io(i);
 	b->set_debug(d);
 	b->set_ppu(p);
+	b->set_lcd(l);
 	
 }
 
@@ -111,13 +114,24 @@ int emu::emu_run()
 
 void emu::emu_cycles(int cpu_cycles)
 {
-	//TODO
-	int n = cpu_cycles * 4;
-	for (int i = 0; i < n; i++)
+	
+	//int n = cpu_cycles * 4;
+	//for (int i = 0; i < n; i++)
+	//{
+	//	ticks++;
+	//	b->bus_timer_tick();
+	//}
+
+	for (int i = 0; i < cpu_cycles; i++)
 	{
-		ticks++;
-		b->bus_timer_tick();
+		for (int n = 0; n < 4; n++)
+		{
+			ticks++;
+			b->bus_timer_tick();
+		}
+		b->dma_tick();
 	}
+
 }
 
 uint64_t emu::get_ticks()

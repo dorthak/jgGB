@@ -10,6 +10,7 @@
 #include "timer.h"
 #include "dbg.h"
 #include "ppu.h"
+#include "lcd.h"
 
 class cpu;
 
@@ -42,6 +43,7 @@ private:
 	timer* t;
 	dbg* d;
 	ppu* p;
+	lcd* l;
 	
 	bool die;
 	bool paused;
