@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /tests/vcpkg_installed
 /jgGB/reg.cpp
 /jgGB/reg.h
+/roms/tetris.gb

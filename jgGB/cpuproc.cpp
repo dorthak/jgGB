@@ -280,17 +280,17 @@ void cpu::fIN_SUB()
 
 void cpu::fIN_SBC()
 {
+    // result = regVal - (fetched_data + carry_flag)
+
     uint16_t val = fetched_data + CPU_FLAG_C;
     uint16_t regVal = cpu_read_reg(reg_1);
+    uint16_t result = regVal - val;
 
-    int z = regVal - val == 0;
+    int z = (result & 0xFF) == 0;
+    int h = (((int)regVal & 0xF) - ((int)fetched_data & 0xF) - CPU_FLAG_C) < 0;
+    int c = val > regVal;
 
-    int h = ((int)regVal & 0xF)
-        - ((int)fetched_data & 0xF) - ((int)CPU_FLAG_C) < 0;
-    int c = ((int)regVal)
-        - ((int)fetched_data) - ((int)CPU_FLAG_C) < 0;
-
-    cpu_set_reg(reg_1, regVal - val);
+    cpu_set_reg(reg_1, result);
 
     cpu_set_flags(z, 1, h, c);
 }
