@@ -5,6 +5,8 @@
 #include "timer.h"
 #include "dbg.h"
 #include "ppu.h"
+
+#include <windows.h>
 // 0x0000 - 0x3FFF : ROM Bank 0
 // 0x4000 - 0x7FFF : ROM Bank 1 - Switchable
 // 0x8000 - 0x97FF : CHR RAM
@@ -21,6 +23,10 @@
 
 bus::bus()
 {
+	dma_active = false;
+	dma_cur_byte = 0;
+	dma_cur_value = 0;
+	dma_start_delay = 0;
 
 }
 
@@ -53,9 +59,7 @@ uint8_t bus::bus_read(uint16_t address)
 		return r->wram_read(address - 0x2000);
 	} else if (address < 0xFEA0) {
 		//OAM
-		//TODO
-		//printf("UNSUPPORTED bus_read(%04X)\n", address);
-		//NO_IMPL
+
 		return p->ppu_oam_read(address);
 	} else if (address < 0xFF00) {
 		//reserved unsuable
@@ -209,4 +213,40 @@ void bus::bus_dbg_update()
 void bus::bus_dbg_print()
 {
 	d->dbg_print();
+}
+
+
+void bus::dma_start(uint8_t start)
+{
+	dma_active = true;
+	dma_cur_byte = 0;
+	dma_start_delay = 2;
+	dma_cur_value = start;
+}
+void bus::dma_tick()
+{
+	if (!dma_active)
+	{
+		return;
+	}
+	if (dma_start_delay)
+	{
+		dma_start_delay--;
+		return;
+	}
+
+	p->ppu_oam_write(dma_cur_byte, bus_read((dma_cur_value * 0x100) + dma_cur_byte));
+	dma_cur_byte++;
+	dma_active = dma_cur_byte < 0xA0;
+
+	if (!dma_active)
+	{
+		std::cout << "DMA DONE!" << std::endl;
+		Sleep(2);
+	}
+	
+}
+bool bus::dma_transferring()
+{
+	return dma_active;
 }

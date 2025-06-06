@@ -16,5 +16,8 @@ public:
 private:
 	char serial_data[2];
 	bus* b;
+
+	//TODO: temp
+	uint8_t ly = 0;
 };
 

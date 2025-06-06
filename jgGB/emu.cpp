@@ -103,6 +103,7 @@ int emu::emu_run()
 	{
 		u->delay(1);
 		u->ui_handle_events();
+		u->ui_update();
 	}
 	
 	return 0;

@@ -40,6 +40,11 @@ public:
 	void bus_dbg_update();
 	void bus_dbg_print();
 
+	//DMA commands
+	void dma_start(uint8_t start);
+	void dma_tick();
+	bool dma_transferring();
+
 private:
 	cart* crt;
 	ram* r;
@@ -48,5 +53,11 @@ private:
 	timer* t;
 	dbg* d;
 	ppu* p;
+
+	//DMA status
+	bool dma_active;
+	uint8_t dma_cur_byte;
+	uint8_t dma_cur_value;
+	uint8_t dma_start_delay;
 };
 

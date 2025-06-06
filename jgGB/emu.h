@@ -29,9 +29,10 @@ public:
 	uint64_t get_ticks();
 
 	void kill();
+	bus* b;
 
 private:
-	bus *b;
+
 	cpu *c;
 	cart *crt;
 	ram* r;

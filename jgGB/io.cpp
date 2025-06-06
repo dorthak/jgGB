@@ -27,7 +27,8 @@ uint8_t io::io_read(uint16_t address)
 			return b->bus_timer_read(address); 
 		case 0xFF0F: return b->bus_get_cpu_int_flags(); 
 
-		case 0xFF44: return 0x90;  //TODO: temp, just here to make 01-special go
+//		case 0xFF44: return 0x90;  //TODO: temp, just here to make 01-special go
+		case 0xFF44: return ly++;  //TODO: temp, just here to make tetris work
 		default:
 			//printf("UNSUPPORTED bus_read(%04X)\n", address);
 			return 0;
@@ -46,6 +47,7 @@ void io::io_write(uint16_t address, uint8_t value)
 		case 0xFF07: 
 			b->bus_timer_write(address, value); break;
 		case 0xFF0F: b->bus_set_cpu_int_flags(value); break;
+		case 0xFF46: b->dma_start(value); std::cout << "DMA Start!" << std::endl; break;
 
 		default:
 			//printf("UNSUPPORTED bus_write(%04X)\n", address);
