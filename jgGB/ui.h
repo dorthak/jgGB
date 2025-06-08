@@ -20,6 +20,7 @@ public:
 	void set_emu(emu* e);
 
 	void delay(uint32_t ms);
+	uint32_t get_ticks();
 	
 
 private:

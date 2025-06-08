@@ -70,6 +70,10 @@ void ui::delay(uint32_t ms)
 	SDL_Delay(ms);
 }
 
+uint32_t ui::get_ticks()
+{
+	return (uint32_t)SDL_GetTicks();
+}
 
 void ui::display_tile(SDL_Surface *surface, uint16_t startLocation, uint16_t tileNum, int x, int y)
 {

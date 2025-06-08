@@ -4,6 +4,7 @@
 //forward declare
 class bus;
 class lcd;
+class ui;
 
 
 static const int LINES_PER_FRAME = 154;
@@ -15,7 +16,7 @@ static const int XRES = 160;
 class ppu
 {
 public:
-	ppu(bus *b, lcd* l);
+	ppu(bus *b, lcd* l, ui* u);
 	~ppu();
 	void ppu_tick();
 
@@ -48,6 +49,8 @@ public:
 
 	} oam_entry;
 
+	uint32_t ppu_get_current_frame();
+
 private:
 //	uint32_t* video_buffer;
 	uint32_t video_buffer[YRES * XRES];
@@ -59,6 +62,22 @@ private:
 
 	bus* b;
 	lcd* l;
+	ui* u;
+
+	//frame timing variables
+
+	const uint32_t target_frame_time = 1000 / 60;
+	long prev_frame_time = 0;
+	long start_timer = 0;
+	long frame_count = 0;
+
+	//state machine functions
+	void ppu_mode_oam();
+	void ppu_mode_xfer();
+	void ppu_mode_vblank();
+	void ppu_mode_hblank();
+
+	
 
 };
 

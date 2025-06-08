@@ -28,7 +28,7 @@ emu::emu()
 	t = new timer(b);
 	d = new dbg(b);
 	l = new lcd(b);
-	p = new ppu(b, l);
+	p = new ppu(b, l, u);
 
 
 	s->set_cpu(c);
@@ -102,11 +102,17 @@ int emu::emu_run()
 	std::thread cpu_thread(&emu::run_cpu, this);
 	cpu_thread.detach();
 
+	uint32_t prev_frame = 0;
+
 	while (!die)
 	{
 		u->delay(1);
 		u->ui_handle_events();
-		u->ui_update();
+		if (prev_frame != p->ppu_get_current_frame())
+		{
+			u->ui_update();
+		}
+		prev_frame = p->ppu_get_current_frame();
 	}
 	
 	return 0;
@@ -128,6 +134,7 @@ void emu::emu_cycles(int cpu_cycles)
 		{
 			ticks++;
 			b->bus_timer_tick();
+			p->ppu_tick();
 		}
 		b->dma_tick();
 	}

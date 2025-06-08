@@ -47,6 +47,9 @@ public:
 	uint8_t lcd_read(uint16_t address);
 	void lcd_write(uint16_t address, uint8_t value);
 
+	void increment_ly();
+	void set_ly(uint8_t val);
+	uint8_t get_ly();
 
 private:
 	

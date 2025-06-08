@@ -184,7 +184,7 @@ void bus::set_ppu(ppu* p)
 {
 	this->p = p;
 }
-void bus::set_lcd(lcd* p)
+void bus::set_lcd(lcd* l)
 {
 	this->l = l;
 }
@@ -252,11 +252,11 @@ void bus::dma_tick()
 	dma_cur_byte++;
 	dma_active = dma_cur_byte < 0xA0;
 
-	if (!dma_active)
-	{
-		std::cout << "DMA DONE!" << std::endl;
-		Sleep(2);
-	}
+	//if (!dma_active)
+	//{
+	//	std::cout << "DMA DONE!" << std::endl;
+	//	Sleep(2);
+	//}
 	
 }
 bool bus::dma_transferring()

@@ -24,12 +24,12 @@ lcd::lcd(bus* b)
 		sp2_colors[i] = colors_default[i];
 	}
 
-	scroll_y = 0xBC;
-	lcd_write(0xFF45, 0x12);
-	uint8_t temp = lcd_read(0xFF42);
-	temp = lcd_read(0xFF45);
-	lcd_write(0xFF46, 0x25);
-	std::cout << temp << std::endl;
+	//scroll_y = 0xBC;
+	//lcd_write(0xFF45, 0x12);
+	//uint8_t temp = lcd_read(0xFF42);
+	//temp = lcd_read(0xFF45);
+	//lcd_write(0xFF46, 0x25);
+	//std::cout << temp << std::endl;
 
 }
 
@@ -143,12 +143,32 @@ void lcd::lcd_write(uint16_t address, uint8_t value)
 			update_palette(value & (~0b11), 1);
 			break;
 		case 0xFF49: //OBP1 - ObJ palette 1 data
-			update_palette(value & (~0b11), 1);
+			update_palette(value & (~0b11), 2);
 			break;
-
 	}
-		
-	
+}
 
+void lcd::increment_ly()
+{
+	ly++;
 
+	if (ly == ly_compare)
+	{
+		lcds_lyc_set(true);
+		if (lcds_stat_int(SS_LYC))
+		{
+			b->bus_request_cpu_interrupt(instdata::IT_LCD_STAT);
+		}
+	} else {
+		lcds_lyc_set(false);
+	}
+}
+
+void lcd::set_ly(uint8_t val)
+{
+	ly = val;
+}
+uint8_t lcd::get_ly()
+{
+	return ly;
 }
