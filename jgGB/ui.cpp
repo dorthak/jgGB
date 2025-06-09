@@ -1,6 +1,7 @@
 #include "ui.h"
 #include "emu.h"
 #include "bus.h"
+#include "ppu.h"
 
 ui::ui()
 {
@@ -18,6 +19,10 @@ void ui::set_emu(emu* e)
 {
 	this->em = e;
 }
+void ui::set_ppu(ppu* p)
+{
+	this->p = p;
+}
 
 
 void ui::ui_init()
@@ -28,6 +33,12 @@ void ui::ui_init()
 	std::cout << "TTF INIT" << std::endl;
 
 	SDL_CreateWindowAndRenderer("jgGB", SCREEN_WIDTH, SCREEN_HEIGHT, 0, &sdlWindow, &sdlRenderer);
+
+	SDL_PixelFormat pixelScreenFormat = SDL_GetPixelFormatForMasks(32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+
+	screen = SDL_CreateSurface(SCREEN_WIDTH, SCREEN_HEIGHT, pixelScreenFormat);
+
+	sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	SDL_CreateWindowAndRenderer("jgGB Debug", (16 * 8 * debugScale), (32 * 8 * debugScale), 0, &sdlDebugWindow, &sdlDebugRenderer);
 
@@ -42,11 +53,34 @@ void ui::ui_init()
 	int x, y;
 	SDL_GetWindowPosition(sdlWindow, &x, &y);
 	SDL_SetWindowPosition(sdlDebugWindow, x + SCREEN_WIDTH + 10, y);
-
-
 }
+
 void ui::ui_update()
 {
+	SDL_Rect rc;
+	rc.x = rc.y = 0;
+	rc.w = rc.h = 2048;
+
+	uint32_t* video_buffer = p->get_video_buffer();
+
+	for (int line_num = 0; line_num < YRES; line_num++)
+	{
+		for (int x = 0; x < XRES; x++)
+		{
+			rc.x = x * scale;
+			rc.y = line_num * scale;
+			rc.w = scale;
+			rc.h = scale;
+
+			SDL_FillSurfaceRect(screen, &rc, video_buffer[x + (line_num * XRES)]);
+		}
+	}
+
+	SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
+	SDL_RenderClear(sdlRenderer);
+	SDL_RenderTexture(sdlRenderer, sdlTexture, NULL, NULL);
+	SDL_RenderPresent(sdlRenderer);
+
 	update_dbg_window();
 }
 void ui::ui_handle_events()
@@ -117,8 +151,7 @@ void ui::update_dbg_window()
 	uint16_t addr = 0x8000;
 
 	//384 tiles, 24 x 16
-
-	for (int y = 0; y < 24; y++)
+		for (int y = 0; y < 24; y++)
 	{
 		for (int x = 0; x < 16; x++)
 		{

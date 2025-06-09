@@ -29,6 +29,7 @@ emu::emu()
 	d = new dbg(b);
 	l = new lcd(b);
 	p = new ppu(b, l, u);
+	
 
 
 	s->set_cpu(c);
@@ -39,7 +40,7 @@ emu::emu()
 	b->set_debug(d);
 	b->set_ppu(p);
 	b->set_lcd(l);
-	
+	u->set_ppu(p);
 }
 
 emu::~emu()

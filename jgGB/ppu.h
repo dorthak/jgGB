@@ -1,5 +1,6 @@
 #pragma once
 #include "common.h"
+#include <queue>
 
 //forward declare
 class bus;
@@ -51,6 +52,16 @@ public:
 
 	uint32_t ppu_get_current_frame();
 
+	typedef enum {
+		FS_TILE,
+		FS_DATA0,
+		FS_DATA1,
+		FS_IDLE,
+		FS_PUSH
+	} fetch_state;
+
+	uint32_t* get_video_buffer();
+
 private:
 //	uint32_t* video_buffer;
 	uint32_t video_buffer[YRES * XRES];
@@ -77,7 +88,28 @@ private:
 	void ppu_mode_vblank();
 	void ppu_mode_hblank();
 
-	
+	//pixel fifo data
+	std::queue<uint32_t> pixel_fifo;
+	fetch_state cur_fetch_state;
+	uint8_t line_x;
+	uint8_t pushed_x;
+	uint8_t fetch_x;
+	uint8_t bgw_fetch_data[3];
+	uint8_t fetch_entry_data[6];
+	uint8_t map_y;
+	uint8_t map_x;
+	uint8_t tile_y;
+	uint8_t fifo_x;
+
+	//pixel fifo functions
+	uint32_t pipeline_fifo_pop();
+	bool pipeline_fifo_add();
+	void pipeline_fetch();
+	void pipeline_push_pixel();
+	void pipeline_process();
+	void pipeline_fifo_reset();
+
+
 
 };
 

@@ -6,6 +6,7 @@
 
 
 class emu;
+class ppu;
 
 class ui
 {
@@ -18,6 +19,7 @@ public:
 	void ui_update();
 	
 	void set_emu(emu* e);
+	void set_ppu(ppu* p);
 
 	void delay(uint32_t ms);
 	uint32_t get_ticks();
@@ -25,6 +27,7 @@ public:
 
 private:
 	emu* em;
+	ppu* p;
 
 	static const int SCREEN_WIDTH = 1024;
 	static const int SCREEN_HEIGHT = 768;
@@ -34,6 +37,7 @@ private:
 	SDL_Texture* sdlTexture;
 	SDL_Surface* screen;
 
+	const int scale = 4;
 	const int debugScale = 4;
 
 	const unsigned long tile_colors[4] = { 0xFFFFFFFF, 0xFFAAAAAA, 0xFF555555, 0xFF000000 };

@@ -179,6 +179,8 @@
     <ClCompile Include="io.cpp" />
     <ClCompile Include="lcd.cpp" />
     <ClCompile Include="ppu.cpp" />
+    <ClCompile Include="ppu_pipeline.cpp" />
+    <ClCompile Include="ppu_sm.cpp" />
     <ClCompile Include="ram.cpp" />
     <ClCompile Include="reg.cpp" />
     <ClCompile Include="stack.cpp" />

@@ -55,7 +55,7 @@ uint16_t lcd::lcdc_bg_map_area()
 	bool bit = BIT(lcdc, 3);
 	return bit ? 0x9C00 : 0x9800;
 }
-uint16_t lcd::lcdc_bg_data_area()
+uint16_t lcd::lcdc_bgw_data_area()
 {
 	bool bit = BIT(lcdc, 4);
 	return bit ? 0x8000 : 0x8800;
@@ -171,4 +171,44 @@ void lcd::set_ly(uint8_t val)
 uint8_t lcd::get_ly()
 {
 	return ly;
+}
+uint8_t lcd::get_scroll_x()
+{
+	return scroll_x;
+}
+uint8_t lcd::get_scroll_y()
+{
+	return scroll_y;
+}
+uint32_t lcd::get_bg_colors(uint8_t index)
+{
+	if (index > 3)
+	{
+		std::cout << "Invalid index into lcd::bg_colors" << std::endl;
+		return 0;
+	}
+	return bg_colors[index];
+}
+
+uint32_t lcd::get_sp_colors(uint8_t bank, uint8_t index)
+{
+	if (index > 3)
+	{
+		std::cout << "Invalid index into lcd::sp_colors" << std::endl;
+		return 0;
+	}
+
+	if (bank > 1)
+	{
+		std::cout << "Invalid bank into lcd::sp_colors" << std::endl;
+		return 0;
+	}
+	switch (bank)
+	{
+		case 0: return sp1_colors[index]; break;
+		case 1: return sp2_colors[index]; break;
+	}
+
+	return 0;
+	
 }

@@ -31,7 +31,7 @@ public:
 	bool lcdc_obj_enable();
 	uint8_t lcdc_obj_height();
 	uint16_t lcdc_bg_map_area();
-	uint16_t lcdc_bg_data_area();
+	uint16_t lcdc_bgw_data_area();
 	bool lcdc_win_enable();
 	uint16_t lcdc_win_map_area();
 	bool lcdc_lcd_enable();
@@ -50,6 +50,10 @@ public:
 	void increment_ly();
 	void set_ly(uint8_t val);
 	uint8_t get_ly();
+	uint8_t get_scroll_x();
+	uint8_t get_scroll_y();
+	uint32_t get_bg_colors(uint8_t index);
+	uint32_t get_sp_colors(uint8_t bank, uint8_t index);
 
 private:
 	
@@ -65,6 +69,8 @@ private:
 	uint8_t obj_palette[2];
 	uint8_t win_y;
 	uint8_t win_x;
+
+	//other data
 
 	uint32_t bg_colors[4];
 	uint32_t sp1_colors[4];
