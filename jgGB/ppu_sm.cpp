@@ -1,7 +1,8 @@
-#include "ppu.h"
 #include "bus.h"
 #include "lcd.h"
+#include "ppu.h"
 #include "ui.h"
+#include <algorithm>
 
 void ppu::ppu_mode_oam()
 {
@@ -13,6 +14,14 @@ void ppu::ppu_mode_oam()
 		fetch_x = 0;
 		pushed_x = 0;
 		fifo_x = 0;
+	}
+
+	if (line_ticks == 1)
+	{
+		//read oam on the first tick only
+		line_sprite_count = 0;
+		load_line_sprites();
+
 	}
 }
 void ppu::ppu_mode_xfer()
@@ -91,5 +100,46 @@ void ppu::ppu_mode_hblank()
 		}
 		line_ticks = 0;
 	}
+
+}
+
+bool comp_oam(ppu::oam_entry a, ppu::oam_entry b)
+{
+	return a.x < b.x;
+}
+
+void ppu::load_line_sprites()
+{
+	int cur_y = l->get_ly();
+
+	uint8_t sprite_height = l->lcdc_obj_height();
+
+	line_sprites.clear();
+
+	for (int i = 0; i < 40; i++)
+	{
+		oam_entry e = oam_ram[i];
+
+		if (!e.x)
+		{
+			//x = 0 means not visible
+			continue;
+		}
+
+		if (line_sprite_count >= 10)
+		{
+			//max 10 sprites per line
+			break;
+		}
+
+		if ((e.y <= cur_y + 16) && (e.y + sprite_height > cur_y + 16))
+		{
+			// this sprite is on the current line
+			line_sprites.push_back(e);
+			line_sprite_count++;
+
+		}
+	}
+	std::sort(line_sprites.begin(), line_sprites.end(), comp_oam);
 
 }

@@ -28,6 +28,10 @@ ppu::ppu(bus *b, lcd* l, ui* u)
 	fetch_x = 0;
 	cur_fetch_state = FS_TILE;
 
+	line_sprites.reserve(10);
+	line_sprite_count = 0;
+	fetched_entry_count = 0;
+
 }
 
 ppu::~ppu()

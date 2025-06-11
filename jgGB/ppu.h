@@ -1,6 +1,7 @@
 #pragma once
 #include "common.h"
 #include <queue>
+#include <vector>
 
 //forward declare
 class bus;
@@ -101,6 +102,11 @@ private:
 	uint8_t tile_y;
 	uint8_t fifo_x;
 
+	//object fifo data
+	uint8_t line_sprite_count;
+	uint8_t fetched_entry_count;
+	oam_entry fetched_entries[3];
+
 	//pixel fifo functions
 	uint32_t pipeline_fifo_pop();
 	bool pipeline_fifo_add();
@@ -109,7 +115,11 @@ private:
 	void pipeline_process();
 	void pipeline_fifo_reset();
 
-
-
+	//object fifo functions
+	std::vector<oam_entry> line_sprites;
+	void load_line_sprites();
+	uint32_t fetch_sprite_pixels(int bit, uint32_t color, uint8_t bg_color);
+	void pipeline_load_sprite_tile();
+	void pipeline_load_sprite_data(uint8_t offset);
 };
 
