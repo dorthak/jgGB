@@ -142,6 +142,30 @@ void ppu::pipeline_load_sprite_data(uint8_t offset)
 	}
 }
 
+void ppu::pipeline_load_window_tile()
+{
+	if (!l->window_visible())
+	{
+		return;
+	}
+	uint8_t window_y = l->get_win_y();
+	uint8_t window_x = l->get_win_x();
+
+	if ((fetch_x + 7 >= window_x) && (fetch_x + 7 < window_x + YRES + 14))
+	{
+		if ((l->get_ly() >= window_y) && (l->get_ly() < window_y + XRES))
+		{
+			uint8_t w_tile_y = l->get_window_line() / 8;
+			bgw_fetch_data[0] = b->bus_read(l->lcdc_win_map_area() + 
+				((fetch_x + 7 - window_x) / 8) + (w_tile_y * 32));
+			if (l->lcdc_bgw_data_area() == 0x8800)
+			{
+				bgw_fetch_data[0] += 128;
+			}
+		}
+	}
+}
+
 void ppu::pipeline_fetch()
 {
 	switch (cur_fetch_state)
@@ -152,10 +176,13 @@ void ppu::pipeline_fetch()
 			if (l->lcdc_bgw_enable())
 			{
 				bgw_fetch_data[0] = b->bus_read(l->lcdc_bg_map_area() + (map_x / 8) + ((map_y / 8) * 32));
+
 				if (l->lcdc_bgw_data_area() == 0x8800)
 				{
 					bgw_fetch_data[0] += 128;
 				}
+
+				pipeline_load_window_tile();
 			}
 
 			if (l->lcdc_obj_enable() && !line_sprites.empty())

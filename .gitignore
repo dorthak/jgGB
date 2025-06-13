@@ -366,3 +366,5 @@ FodyWeavers.xsd
 /jgGB/reg.h
 /roms/tetris.gb
 /roms/DrMario.gb
+/runner/log.txt
+/log.txt

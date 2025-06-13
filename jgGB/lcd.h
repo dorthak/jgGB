@@ -54,6 +54,11 @@ public:
 	uint8_t get_scroll_y();
 	uint32_t get_bg_colors(uint8_t index);
 	uint32_t get_sp_colors(uint8_t bank, uint8_t index);
+	uint8_t get_window_line();
+	void set_window_line(uint8_t value);
+	bool window_visible();
+	uint8_t get_win_x();
+	uint8_t get_win_y();
 
 private:
 	
@@ -71,6 +76,8 @@ private:
 	uint8_t win_x;
 
 	//other data
+
+	uint8_t window_line;
 
 	uint32_t bg_colors[4];
 	uint32_t sp1_colors[4];

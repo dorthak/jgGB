@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 	char* argvt[3];
 
 
-	int target = 14;  //set here
+	int target = 12;  //set here
 	switch (target)
 	{
 		case 0: argvt[1] = (char*)"E:\\prog\\gbasm\\gb_emu_test\\emu-test1.gb"; break;

@@ -2,14 +2,16 @@
 #include "emu.h"
 #include "bus.h"
 #include "ppu.h"
+#include "io.h"
 
 ui::ui()
 {
 
 }
-ui::ui(emu* e)
+ui::ui(emu* e, io* i)
 {
 	this->em = e;
+	this->i = i;
 }
 ui::~ui()
 {
@@ -63,16 +65,16 @@ void ui::ui_update()
 
 	uint32_t* video_buffer = p->get_video_buffer();
 
-	for (int line_num = 0; line_num < YRES; line_num++)
+	for (int line_num = 0; line_num < ppu::YRES; line_num++)
 	{
-		for (int x = 0; x < XRES; x++)
+		for (int x = 0; x < ppu::XRES; x++)
 		{
 			rc.x = x * scale;
 			rc.y = line_num * scale;
 			rc.w = scale;
 			rc.h = scale;
 
-			SDL_FillSurfaceRect(screen, &rc, video_buffer[x + (line_num * XRES)]);
+			SDL_FillSurfaceRect(screen, &rc, video_buffer[x + (line_num * ppu::XRES)]);
 		}
 	}
 
@@ -83,6 +85,22 @@ void ui::ui_update()
 
 	update_dbg_window();
 }
+
+void ui::ui_on_key(bool down, SDL_Keycode key_code)
+{
+	switch (key_code)
+	{
+		case SDLK_Z:		i->gamepad.b		= down; break;
+		case SDLK_X:		i->gamepad.a		= down; break;
+		case SDLK_RETURN:	i->gamepad.start	= down; break;
+		case SDLK_TAB:		i->gamepad.select	= down; break;
+		case SDLK_UP:		i->gamepad.up		= down; break;
+		case SDLK_DOWN:		i->gamepad.down		= down; break;
+		case SDLK_LEFT:		i->gamepad.left		= down; break;
+		case SDLK_RIGHT:	i->gamepad.right	= down; break;
+	}
+}
+
 void ui::ui_handle_events()
 {
 	SDL_Event e;
@@ -91,6 +109,14 @@ void ui::ui_handle_events()
 		//TODO SDL_UpdateWindowSurface(sdlWindow);
 		//TODO SDL_UpdateWindowSurface(sdlTraceWindow);
 		//TODO SDL_UpdateWindowSurface(sdlDebugWindow);
+		if (e.type == SDL_EVENT_KEY_DOWN)
+		{
+			ui_on_key(true, e.key.key);
+		}
+		if (e.type == SDL_EVENT_KEY_UP)
+		{
+			ui_on_key(false, e.key.key);
+		}
 
 		if (e.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED || e.type == SDL_EVENT_WINDOW_DESTROYED) 
 		{

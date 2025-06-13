@@ -7,12 +7,13 @@
 
 class emu;
 class ppu;
+class io;
 
 class ui
 {
 public:
 	ui();
-	ui(emu* e);
+	ui(emu* e, io* i);
 	~ui();
 	void ui_init();
 	void ui_handle_events();
@@ -28,6 +29,7 @@ public:
 private:
 	emu* em;
 	ppu* p;
+	io* i;
 
 	static const int SCREEN_WIDTH = 1024;
 	static const int SCREEN_HEIGHT = 768;
@@ -50,6 +52,8 @@ private:
 	void display_tile(SDL_Surface* surface, uint16_t startLocation, uint16_t tileNum, int x, int y);
 
 	void update_dbg_window();
+
+	void ui_on_key(bool down, SDL_Keycode key_code);
 
 };
 

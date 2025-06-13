@@ -55,12 +55,9 @@ uint8_t bus::bus_read(uint16_t address)
 		return r->wram_read(address);
 	} else if (address < 0xFE00) {
 		//reserved echo ram
-//		return 0;
-		//TODO: Let's try it.
 		return r->wram_read(address - 0x2000);
 	} else if (address < 0xFEA0) {
 		//OAM
-
 		return p->ppu_oam_read(address);
 	} else if (address < 0xFF00) {
 		//reserved unsuable
@@ -112,8 +109,6 @@ void bus::bus_write(uint16_t address, uint8_t value)
 		r->wram_write(address, value);
 	} else if (address < 0xFE00) {
 		//reserved echo ram
-
-		//TODO let's try anyway:
 		r->wram_write(address - 0x2000, value);
 		
 	} else if (address < 0xFEA0) {

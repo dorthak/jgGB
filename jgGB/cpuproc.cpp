@@ -149,6 +149,12 @@ void cpu::fIN_PUSH()
 
 void cpu::goto_addr(uint16_t addr, bool pushpc)
 {
+    if (addr == 0x20C || addr <= 0x08)
+    {
+        printf("PC: %04x\n", addr);
+        int a = 1;
+    }
+
     if (check_cond())
     {
         if (pushpc)
@@ -202,6 +208,10 @@ void cpu::fIN_RET()
 
 void cpu::fIN_RST()
 {
+    if (param == 0x08)
+    {
+        int a = 1;
+    }
     goto_addr(param, true);
 }
 
@@ -494,7 +504,7 @@ void cpu::fIN_RLA()
 void cpu::fIN_STOP()
 {
     std::cerr << "STOPPING!" << std::endl;
-    NO_IMPL
+    //NO_IMPL
 }
 
 void cpu::fIN_HALT()

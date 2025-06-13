@@ -3,6 +3,7 @@
 #include "emu.h"
 
 
+
 cpu::cpu(bus* b, emu* e, stack* s)
 {
     this->regs.PC = 0x100;
@@ -17,18 +18,28 @@ cpu::cpu(bus* b, emu* e, stack* s)
     this->s = s;
 
     disassemble_string = "                "; //reserve 16 spaces
+#ifdef DEBUG_PRINT
+    myfile = fopen("e:/prog/jgGB/log.txt", "w");
+#endif
 }
 
 cpu::~cpu()
 {
-
+#ifdef DEBUG_PRINT
+    fclose(myfile);
+#endif
 }
 
 bool cpu::cpu_step() {
     if (!(halted))
     {
         uint16_t pc = regs.PC;
-        
+
+        if (pc == 0x100 || pc == 0x101 || pc == 0x150 || pc == 0x20C)
+        {
+           printf("PC: %04x\n", pc);
+            int a = 1;
+        }
         disassemble_string = "                ";
         
         fetch_instruction();
@@ -49,7 +60,7 @@ bool cpu::cpu_step() {
 
 #ifdef DEBUG_PRINT
 
-        printf("%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
+        fprintf(myfile, "%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
             (unsigned long)e->get_ticks(),
             pc, disassemble_string.c_str(), cur_opcode,
             b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
@@ -425,11 +436,6 @@ bool cpu::fetch_data()
     mem_dest = 0;
     dest_is_mem = false;
 
-/*    if (this->cur_opcode == 0)
-    {
-        return false;
-    }
-*/
     if (a_mode == NULL)
     {
         std::cout << "Unknown Addreessing Mode! " << cur_opcode << std::endl;

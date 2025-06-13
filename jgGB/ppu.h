@@ -9,15 +9,18 @@ class lcd;
 class ui;
 
 
-static const int LINES_PER_FRAME = 154;
-static const int TICKS_PER_LINE = 456;
-static const int YRES = 144;
-static const int XRES = 160;
+
 
 
 class ppu
 {
 public:
+
+	static const int LINES_PER_FRAME = 154;
+	static const int TICKS_PER_LINE = 456;
+	static const int YRES = 144;
+	static const int XRES = 160;
+
 	ppu(bus *b, lcd* l, ui* u);
 	~ppu();
 	void ppu_tick();
@@ -72,6 +75,8 @@ private:
 	uint32_t current_frame;
 	uint32_t line_ticks;
 
+	
+
 	bus* b;
 	lcd* l;
 	ui* u;
@@ -121,5 +126,8 @@ private:
 	uint32_t fetch_sprite_pixels(int bit, uint32_t color, uint8_t bg_color);
 	void pipeline_load_sprite_tile();
 	void pipeline_load_sprite_data(uint8_t offset);
+
+	//window functions
+	void pipeline_load_window_tile();
 };
 

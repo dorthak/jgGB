@@ -23,8 +23,8 @@ emu::emu()
 	crt = new cart();
 	c = new cpu(b, this, s);
 	r = new ram();
-	u = new ui(this);
 	i = new io(b);
+	u = new ui(this, i);
 	t = new timer(b);
 	d = new dbg(b);
 	l = new lcd(b);
@@ -122,13 +122,6 @@ int emu::emu_run()
 void emu::emu_cycles(int cpu_cycles)
 {
 	
-	//int n = cpu_cycles * 4;
-	//for (int i = 0; i < n; i++)
-	//{
-	//	ticks++;
-	//	b->bus_timer_tick();
-	//}
-
 	for (int i = 0; i < cpu_cycles; i++)
 	{
 		for (int n = 0; n < 4; n++)

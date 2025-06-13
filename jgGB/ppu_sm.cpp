@@ -51,6 +51,7 @@ void ppu::ppu_mode_vblank()
 		{
 			l->lcds_mode_set(lcd::MODE_OAM);
 			l->set_ly(0);
+			l->set_window_line(0);
 		}
 		line_ticks = 0;
 	}

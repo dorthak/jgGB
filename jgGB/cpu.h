@@ -4,6 +4,7 @@
 #include "instdata.h"
 #include "emu.h"
 #include "stack.h"
+#include <fstream>
 
 #define ILINE(a, b, c, d, e, g) type = instdata::##a ;  inst = &cpu::f##a;     mode = instdata::##b;  a_mode = &cpu::f##b; reg_1 = instdata::##c; reg_2 = instdata::##d;  cond = instdata::##e; param = g; break;
 
@@ -282,6 +283,7 @@ private:
 
 	friend class SST;
 
+	std::FILE * myfile;
 };
 
 

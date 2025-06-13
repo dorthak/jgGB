@@ -11,6 +11,7 @@ ppu::ppu(bus *b, lcd* l, ui* u)
 
 	current_frame = 0;
 	line_ticks = 0;
+	
 
 	//this->video_buffer = (uint32_t *) malloc(YRES * XRES * sizeof(uint32_t));
 	//this->video_buffer = new(uint32_t[YRES * XRES]);

@@ -1,5 +1,6 @@
 #include "lcd.h"
 #include "bus.h"
+#include "ppu.h"
 
 
 lcd::lcd(bus* b)
@@ -16,6 +17,7 @@ lcd::lcd(bus* b)
 	obj_palette[1] = 0xFF;
 	win_y = 0;
 	win_x = 0;
+	window_line = 0;
 	
 	for (int i = 0; i < 4; i++)
 	{
@@ -150,6 +152,11 @@ void lcd::lcd_write(uint16_t address, uint8_t value)
 
 void lcd::increment_ly()
 {
+	if (window_visible() && ly >= win_y && ly < win_y + ppu::YRES)
+	{
+		window_line++;
+	}
+
 	ly++;
 
 	if (ly == ly_compare)
@@ -180,6 +187,33 @@ uint8_t lcd::get_scroll_y()
 {
 	return scroll_y;
 }
+
+uint8_t lcd::get_window_line()
+{
+	return window_line;
+}
+
+void lcd::set_window_line(uint8_t value)
+{
+	window_line = value;
+}
+
+bool lcd::window_visible()
+{
+	return lcdc_win_enable() && (win_x >= 0) && (win_x <= 166)
+		&& (win_y >= 0) && (win_y < ppu::YRES);
+}
+
+uint8_t lcd::get_win_x()
+{
+	return win_x;
+}
+
+uint8_t lcd::get_win_y()
+{
+	return win_y;
+}
+
 uint32_t lcd::get_bg_colors(uint8_t index)
 {
 	if (index > 3)
