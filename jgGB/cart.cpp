@@ -10,7 +10,7 @@ cart::cart()
 
 cart::~cart()
 {
-    free(rom_data);
+    delete rom_data;
 }
 
 bool cart::cart_load(char* cartfilename)
@@ -66,7 +66,7 @@ bool cart::cart_load(char* cartfilename)
             // MBC1
             case 1:
             case 2:
-            case 3: ic = new innercart(this, header, rom_size, rom_data); break;
+            case 3: ic = new iCartMBC1(this, header, rom_size, rom_data); break;
 
             //all others
             default: cartloaded = false;
@@ -194,3 +194,20 @@ void cart::cart_write(uint16_t address, uint8_t value)
     //rom_data[address] = value;
 }
 
+bool cart::cart_need_save()
+{
+    return ic->cart_need_save();
+}
+bool cart::cart_battery()
+{
+    return ic->cart_battery();
+}
+
+void cart::cart_battery_load()
+{
+    ic->cart_battery_load();
+}
+void cart::cart_battery_save()
+{
+    ic->cart_battery_save();
+}

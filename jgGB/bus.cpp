@@ -258,3 +258,22 @@ bool bus::dma_transferring()
 {
 	return dma_active;
 }
+
+bool bus::bus_cart_need_save()
+{
+	return crt->cart_need_save();
+}
+bool bus::bus_cart_battery()
+{
+	return crt->cart_battery();
+}
+
+
+void bus::bus_cart_battery_load()
+{
+	crt->cart_battery_load();
+}
+void bus::bus_cart_battery_save()
+{
+	crt->cart_battery_save();
+}

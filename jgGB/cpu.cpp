@@ -35,11 +35,11 @@ bool cpu::cpu_step() {
     {
         uint16_t pc = regs.PC;
 
-        if (pc == 0x100 || pc == 0x101 || pc == 0x150 || pc == 0x20C)
-        {
-           printf("PC: %04x\n", pc);
-            int a = 1;
-        }
+        //if (pc == 0x100 || pc == 0x101 || pc == 0x150 || pc == 0x20C)
+        //{
+        //   printf("PC: %04x\n", pc);
+        //    int a = 1;
+        //}
         disassemble_string = "                ";
         
         fetch_instruction();

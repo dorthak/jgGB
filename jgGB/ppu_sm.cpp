@@ -91,6 +91,13 @@ void ppu::ppu_mode_hblank()
 				frame_count = 0;
 
 				std::cout << "FPS: " << fps << std::endl;
+
+				//TODO: ?
+				//trigger cart saving from here:  
+				if (b->bus_cart_need_save())
+				{
+					b->bus_cart_battery_save();
+				}
 			}
 			frame_count++;
 			prev_frame_time = u->get_ticks();

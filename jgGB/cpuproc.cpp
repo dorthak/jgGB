@@ -208,10 +208,10 @@ void cpu::fIN_RET()
 
 void cpu::fIN_RST()
 {
-    if (param == 0x08)
-    {
-        int a = 1;
-    }
+    //if (param == 0x08)
+    //{
+    //    int a = 1;
+    //}
     goto_addr(param, true);
 }
 

@@ -36,6 +36,12 @@ public:
         uint16_t global_checksum;
     } rom_header;
 
+    bool cart_need_save();
+    bool cart_battery();
+
+    void cart_battery_load();
+    void cart_battery_save();
+
 private:
     bool cartloaded = false;
 

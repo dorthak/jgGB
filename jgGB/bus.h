@@ -47,6 +47,12 @@ public:
 	void dma_tick();
 	bool dma_transferring();
 
+	//cart save commands
+	bool bus_cart_need_save();
+	bool bus_cart_battery();
+	void bus_cart_battery_load();
+	void bus_cart_battery_save();
+
 private:
 	cart* crt;
 	ram* r;
