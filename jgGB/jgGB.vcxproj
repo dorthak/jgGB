@@ -156,6 +156,8 @@
     <ClInclude Include="cpu.h" />
     <ClInclude Include="dbg.h" />
     <ClInclude Include="emu.h" />
+    <ClInclude Include="iCartMBC1.h" />
+    <ClInclude Include="innercart.h" />
     <ClInclude Include="instruction.h" />
     <ClInclude Include="io.h" />
     <ClInclude Include="lcd.h" />
@@ -175,6 +177,8 @@
     <ClCompile Include="cpuproc.cpp" />
     <ClCompile Include="dbg.cpp" />
     <ClCompile Include="emu.cpp" />
+    <ClCompile Include="iCartMBC1.cpp" />
+    <ClCompile Include="innercart.cpp" />
     <ClCompile Include="instruction.cpp" />
     <ClCompile Include="io.cpp" />
     <ClCompile Include="lcd.cpp" />

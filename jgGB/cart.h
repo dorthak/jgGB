@@ -3,6 +3,7 @@
 
 //forward declare
 class SST;
+class innercart;
 
 
 class cart
@@ -18,6 +19,22 @@ public:
     uint8_t cart_read(uint16_t address);
     void cart_write(uint16_t address, uint8_t value);
 
+    typedef struct {
+        uint8_t entry[4];
+        uint8_t logo[0x30];
+
+        char title[16];
+        uint16_t new_lic_code;
+        uint8_t sgb_flag;
+        uint8_t type;
+        uint8_t rom_size;
+        uint8_t ram_size;
+        uint8_t dest_code;
+        uint8_t lic_code;
+        uint8_t version;
+        uint8_t checksum;
+        uint16_t global_checksum;
+    } rom_header;
 
 private:
     bool cartloaded = false;
@@ -27,29 +44,13 @@ private:
 
     void init_lic_code();
 
-
-    typedef struct {
-        uint8_t entry[4];
-        uint8_t logo[0x30];             
-                
-        char title[16];             
-        uint16_t new_lic_code;              
-        uint8_t sgb_flag;               
-        uint8_t type;               
-        uint8_t rom_size;               
-        uint8_t ram_size;               
-        uint8_t dest_code;              
-        uint8_t lic_code;               
-        uint8_t version;                
-        uint8_t checksum;               
-        uint16_t global_checksum;               
-    } rom_header;               
-                    
     rom_header *header;              
                 
     char filename[1024];                
     uint32_t rom_size;              
     uint8_t* rom_data;
+
+    innercart* ic;
                     
     const std::string ROM_TYPES[0x23] = {             
     "ROM ONLY",             

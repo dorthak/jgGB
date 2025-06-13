@@ -149,11 +149,11 @@ void cpu::fIN_PUSH()
 
 void cpu::goto_addr(uint16_t addr, bool pushpc)
 {
-    if (addr == 0x20C || addr <= 0x08)
-    {
-        printf("PC: %04x\n", addr);
-        int a = 1;
-    }
+    //if (addr == 0x20C || addr <= 0x08)
+    //{
+    //    printf("PC: %04x\n", addr);
+    //    int a = 1;
+    //}
 
     if (check_cond())
     {

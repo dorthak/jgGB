@@ -1,4 +1,6 @@
 #include "cart.h"
+#include "innercart.h"
+#include "iCartMBC1.h"
 
 cart::cart()
 {
@@ -10,7 +12,6 @@ cart::~cart()
 {
     free(rom_data);
 }
-
 
 bool cart::cart_load(char* cartfilename)
 {
@@ -53,8 +54,23 @@ bool cart::cart_load(char* cartfilename)
         printf("\t LIC Code : %2.2X (%s)\n", header->lic_code, cart_lic_name().c_str());
         printf("\t ROM Vers : %2.2X\n", header->version);
 
-
         cartloaded = true;
+
+
+        //select appropriate MBC
+        switch (header->type)
+        {
+            //no MBC
+            case 0:  
+                ic = new innercart(this, header, rom_size, rom_data); break;
+            // MBC1
+            case 1:
+            case 2:
+            case 3: ic = new innercart(this, header, rom_size, rom_data); break;
+
+            //all others
+            default: cartloaded = false;
+        }
     }
 
     return cartloaded;
@@ -137,11 +153,7 @@ void cart::init_lic_code()
     LIC_CODE[0x97] = "Kaneko";
     LIC_CODE[0x99] = "Pack in soft";
     LIC_CODE[0xA4] = "Konami (Yu-Gi-Oh!)";
-
-    
-    
-
-    
+   
 }
 
 std::string cart::cart_lic_name()
@@ -172,11 +184,13 @@ bool cart::cart_loaded()
 
 uint8_t cart::cart_read(uint16_t address)
 {
-    return rom_data[address];
+    return ic->cart_read(address);
 }
 void cart::cart_write(uint16_t address, uint8_t value)
 {
+    ic->cart_write(address, value);
     //printf("cart_write(%04X)\n", address);
     //NO_IMPL
     //rom_data[address] = value;
 }
+

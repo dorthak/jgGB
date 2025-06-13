@@ -63,6 +63,12 @@
     <ClInclude Include="lcd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="innercart.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="iCartMBC1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bus.cpp">
@@ -117,6 +123,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ppu_sm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="innercart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="iCartMBC1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
