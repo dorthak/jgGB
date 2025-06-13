@@ -8,7 +8,7 @@
 class innercart
 {
 public:
-    innercart(cart* c, cart::rom_header* header, uint32_t rom_size, uint8_t* rom_data);
+    innercart(cart* c, cart::rom_header* header, uint32_t rom_size, uint8_t* rom_data, char* filename);
     ~innercart();
 
     virtual uint8_t cart_read(uint16_t address);
@@ -23,7 +23,7 @@ public:
 protected:
     cart::rom_header* header;
 
-    char filename[1024];
+    char *filename;
     uint32_t rom_size;
     uint8_t* rom_data;
 

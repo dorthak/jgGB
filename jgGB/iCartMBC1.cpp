@@ -1,8 +1,11 @@
 #include "iCartMBC1.h"
 
-iCartMBC1::iCartMBC1(cart* c, cart::rom_header* header, uint32_t rom_size, uint8_t* rom_data) : innercart(c, header, rom_size, rom_data)
+iCartMBC1::iCartMBC1(cart* c, cart::rom_header* header, uint32_t rom_size, uint8_t* rom_data, char* filename) : innercart(c, header, rom_size, rom_data, filename)
 {
     std::cout << "iCartMBC1 created" << std::endl;
+    
+    cart_setup_banking();
+
     battery = false;
     if (header->type == 3)
     {
@@ -11,7 +14,6 @@ iCartMBC1::iCartMBC1(cart* c, cart::rom_header* header, uint32_t rom_size, uint8
     }
     need_save = false;
 
-    cart_setup_banking();
     ram_enabled = false;
     ram_banking = false;
     banking_mode = false;
@@ -99,11 +101,43 @@ bool iCartMBC1::cart_battery()
 
 void iCartMBC1::cart_battery_load()
 {
+    char fn[1048];
+    sprintf(fn, "%s.battery", filename);
 
+    errno_t err;
+    FILE* fp;
+
+    err = fopen_s(&fp, fn, "rb");
+
+    if (err)
+    {
+        std::cout << "Failed to open: " << fn << std::endl;
+        return;
+    }
+
+    fread(ram_bank, 0x2000, 1, fp);
+    fclose(fp);
+ 
 }
 
 void iCartMBC1::cart_battery_save()
 {
+    char fn[1048];
+    sprintf(fn, "%s.battery", filename);
+
+    errno_t err;
+    FILE* fp;
+
+    err = fopen_s(&fp, fn, "wb");
+
+    if (err)
+    {
+        std::cout << "Failed to open: " << fn << std::endl;
+        return;
+    }
+
+    fwrite(ram_bank, 0x2000, 1, fp);
+    fclose(fp);
 
 }
 

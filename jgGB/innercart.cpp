@@ -2,13 +2,14 @@
 #include "cart.h"
 
 
-innercart::innercart(cart* c, cart::rom_header* header, uint32_t rom_size, uint8_t* rom_data)
+innercart::innercart(cart* c, cart::rom_header* header, uint32_t rom_size, uint8_t* rom_data, char* filename)
 {
     std::cout << "Innercart created" << std::endl;
     this->c = c;
     this->header = header;
     this->rom_size = rom_size;
     this->rom_data = rom_data;
+    this->filename = filename;
 
 }
 

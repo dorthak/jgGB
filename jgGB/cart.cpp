@@ -6,18 +6,20 @@ cart::cart()
 {
     init_lic_code();
     rom_data = nullptr;
+    filename = new char[1024];
 }
 
 cart::~cart()
 {
     delete rom_data;
+    delete filename;
 }
 
 bool cart::cart_load(char* cartfilename)
 {
    
 
-    snprintf(filename, sizeof(filename), "%s", cartfilename);
+    snprintf(filename, 1024, "%s", cartfilename);
 
     errno_t err;
     FILE* fp;
@@ -62,11 +64,11 @@ bool cart::cart_load(char* cartfilename)
         {
             //no MBC
             case 0:  
-                ic = new innercart(this, header, rom_size, rom_data); break;
+                ic = new innercart(this, header, rom_size, rom_data, filename); break;
             // MBC1
             case 1:
             case 2:
-            case 3: ic = new iCartMBC1(this, header, rom_size, rom_data); break;
+            case 3: ic = new iCartMBC1(this, header, rom_size, rom_data, filename); break;
 
             //all others
             default: cartloaded = false;

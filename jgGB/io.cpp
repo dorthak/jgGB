@@ -43,8 +43,7 @@ void io::io_write(uint16_t address, uint8_t value)
 		case 0xFF04:
 		case 0xFF05:
 		case 0xFF06:
-		case 0xFF07: 
-			b->bus_timer_write(address, value); break;
+		case 0xFF07: b->bus_timer_write(address, value); break;
 		case 0xFF0F: b->bus_set_cpu_int_flags(value); break;
 		
 

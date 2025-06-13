@@ -41,7 +41,6 @@ public:
 
     void cart_battery_load();
     void cart_battery_save();
-
 private:
     bool cartloaded = false;
 
@@ -52,7 +51,7 @@ private:
 
     rom_header *header;              
                 
-    char filename[1024];                
+    char *filename;                
     uint32_t rom_size;              
     uint8_t* rom_data;
 
