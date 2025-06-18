@@ -20,6 +20,8 @@ public:
     virtual void cart_battery_load();
     virtual void cart_battery_save();
 
+    virtual void cart_tick();
+
 protected:
     cart::rom_header* header;
 

@@ -364,7 +364,7 @@ FodyWeavers.xsd
 /tests/vcpkg_installed
 /jgGB/reg.cpp
 /jgGB/reg.h
-/roms/tetris.gb
-/roms/DrMario.gb
+
 /runner/log.txt
 /log.txt
+/roms/*

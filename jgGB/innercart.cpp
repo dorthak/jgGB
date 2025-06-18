@@ -48,3 +48,8 @@ void innercart::cart_battery_save()
 {
     return;
 }
+
+void innercart::cart_tick()
+{
+
+}

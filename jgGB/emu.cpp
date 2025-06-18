@@ -20,7 +20,7 @@ emu::emu()
 
 	b = new bus();
 	s = new stack(b);
-	crt = new cart();
+	crt = new cart(b);
 	c = new cpu(b, this, s);
 	r = new ram();
 	i = new io(b);
@@ -40,6 +40,7 @@ emu::emu()
 	b->set_debug(d);
 	b->set_ppu(p);
 	b->set_lcd(l);
+	b->set_emu(this);
 	u->set_ppu(p);
 }
 
@@ -129,8 +130,30 @@ void emu::emu_cycles(int cpu_cycles)
 			ticks++;
 			b->bus_timer_tick();
 			p->ppu_tick();
+			b->bus_rtc_tick();  //TODO: is this the right place for it?
+
+#ifdef LIMIT_CYCLE_T
+			uint64_t end = u->get_ticks_ns();
+			uint64_t cycle_time = end - prev_cycle_time;
+
+			if (cycle_time < target_cycle_time)
+			{
+				u->delay_ns((target_cycle_time - cycle_time));
+			}
+#endif
 		}
 		b->dma_tick();
+
+		//M-cycle speed limiter
+#ifdef LIMIT_CYCLE_M
+		uint64_t end = u->get_ticks_ns();
+		uint64_t cycle_time = end - prev_cycle_time;
+
+		if (cycle_time < target_cycle_time)
+		{
+			u->delay_ns((target_cycle_time - cycle_time));
+		}
+#endif
 	}
 
 }
@@ -138,6 +161,15 @@ void emu::emu_cycles(int cpu_cycles)
 uint64_t emu::get_ticks()
 {
 	return ticks;
+}
+
+uint64_t emu::get_sys_ticks()
+{
+	return u->get_ticks();
+}
+uint64_t emu::get_sys_ticks_ns()
+{
+	return u->get_ticks_ns();
 }
 
 void emu::run_cpu()

@@ -184,6 +184,11 @@ void bus::set_lcd(lcd* l)
 	this->l = l;
 }
 
+void bus::set_emu(emu* e)
+{
+	this->e = e;
+}
+
 uint8_t bus::bus_get_cpu_int_flags()
 {
 	return c->cpu_get_int_flags();
@@ -276,4 +281,18 @@ void bus::bus_cart_battery_load()
 void bus::bus_cart_battery_save()
 {
 	crt->cart_battery_save();
+}
+
+void bus::bus_rtc_tick()
+{
+	crt->cart_tick();
+}
+
+uint64_t bus::bus_get_ticks()
+{
+	return e->get_sys_ticks();
+}
+uint64_t bus::bus_get_ticks_ns()
+{
+	return e->get_sys_ticks_ns();
 }

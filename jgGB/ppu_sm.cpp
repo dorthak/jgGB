@@ -76,8 +76,8 @@ void ppu::ppu_mode_hblank()
 			current_frame++;
 
 			//calc FPS
-			uint32_t end = u->get_ticks();
-			uint32_t frame_time = end - prev_frame_time;
+			uint64_t end = u->get_ticks();
+			uint64_t frame_time = end - prev_frame_time;
 
 			if (frame_time < target_frame_time)
 			{

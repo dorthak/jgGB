@@ -18,14 +18,14 @@ cpu::cpu(bus* b, emu* e, stack* s)
     this->s = s;
 
     disassemble_string = "                "; //reserve 16 spaces
-#ifdef DEBUG_PRINT
+#ifdef DEBUG_FILE_PRINT
     myfile = fopen("e:/prog/jgGB/log.txt", "w");
 #endif
 }
 
 cpu::~cpu()
 {
-#ifdef DEBUG_PRINT
+#ifdef DEBUG_FILE_PRINT
     fclose(myfile);
 #endif
 }
@@ -58,7 +58,7 @@ bool cpu::cpu_step() {
             regs.Fr & (1 << 4) ? 'C' : '-'
         );
 
-#ifdef DEBUG_PRINT
+#ifdef DEBUG_FILE_PRINT
 
         fprintf(myfile, "%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
             (unsigned long)e->get_ticks(),
@@ -66,7 +66,14 @@ bool cpu::cpu_step() {
             b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
             regs.D, regs.E, regs.H, regs.L, regs.SP);
 #endif
+#ifdef DEBUG_SCREEN_PRINT
 
+        printf("%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
+            (unsigned long)e->get_ticks(),
+            pc, disassemble_string.c_str(), cur_opcode,
+            b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
+            regs.D, regs.E, regs.H, regs.L, regs.SP);
+#endif
 
         if (inst == NULL)
         {

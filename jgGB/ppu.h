@@ -83,10 +83,10 @@ private:
 
 	//frame timing variables
 
-	const uint32_t target_frame_time = 1000 / 60;
-	long prev_frame_time = 0;
-	long start_timer = 0;
-	long frame_count = 0;
+	const uint64_t target_frame_time = 1000 / 60;
+	uint64_t prev_frame_time = 0;
+	uint64_t start_timer = 0;
+	uint64_t frame_count = 0;
 
 	//state machine functions
 	void ppu_mode_oam();

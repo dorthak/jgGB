@@ -23,8 +23,10 @@ public:
 	void set_ppu(ppu* p);
 
 	void delay(uint32_t ms);
-	uint32_t get_ticks();
-	
+	void delay_ns(uint64_t ns);
+	uint64_t get_ticks();
+	uint64_t get_ticks_ns();
+
 
 private:
 	emu* em;

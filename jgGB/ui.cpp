@@ -1,4 +1,4 @@
-#include "ui.h"
+ #include "ui.h"
 #include "emu.h"
 #include "bus.h"
 #include "ppu.h"
@@ -130,9 +130,19 @@ void ui::delay(uint32_t ms)
 	SDL_Delay(ms);
 }
 
-uint32_t ui::get_ticks()
+void ui::delay_ns(uint64_t ns)
 {
-	return (uint32_t)SDL_GetTicks();
+	SDL_DelayNS(ns);
+}
+
+uint64_t ui::get_ticks()
+{
+	return SDL_GetTicks();
+}
+
+uint64_t ui::get_ticks_ns()
+{
+	return SDL_GetTicksNS();
 }
 
 void ui::display_tile(SDL_Surface *surface, uint16_t startLocation, uint16_t tileNum, int x, int y)

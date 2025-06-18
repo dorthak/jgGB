@@ -1,9 +1,12 @@
 #include "cart.h"
 #include "innercart.h"
 #include "iCartMBC1.h"
+#include "iCartMBC3.h"
+#include "bus.h"
 
-cart::cart()
+cart::cart(bus* b)
 {
+    this->b = b;
     init_lic_code();
     rom_data = nullptr;
     filename = new char[1024];
@@ -63,12 +66,18 @@ bool cart::cart_load(char* cartfilename)
         switch (header->type)
         {
             //no MBC
-            case 0:  
+            case 0x00:  
                 ic = new innercart(this, header, rom_size, rom_data, filename); break;
             // MBC1
-            case 1:
-            case 2:
-            case 3: ic = new iCartMBC1(this, header, rom_size, rom_data, filename); break;
+            case 0x01:
+            case 0x02:
+            case 0x03: ic = new iCartMBC1(this, header, rom_size, rom_data, filename); break;
+            // MBC3
+            case 0x0F:
+            case 0x10:
+            case 0x11:
+            case 0x12:
+            case 0x13: ic = new iCartMBC3(this, header, rom_size, rom_data, filename); break;
 
             //all others
             default: cartloaded = false;
@@ -212,4 +221,9 @@ void cart::cart_battery_load()
 void cart::cart_battery_save()
 {
     ic->cart_battery_save();
+}
+
+void cart::cart_tick() 
+{
+    ic->cart_tick();
 }

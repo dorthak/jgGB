@@ -29,6 +29,9 @@ public:
 	void emu_cycles(int cpu_cycles);
 	uint64_t get_ticks();
 
+	uint64_t get_sys_ticks();
+	uint64_t get_sys_ticks_ns();
+
 	void kill();
 	bus* b;
 
@@ -52,5 +55,13 @@ private:
 
 	void run_cpu();
 	friend class SST;
+#ifdef LIMIT_CYCLE_M
+	const uint64_t target_cycle_time = 238 * 4; //ns, m-cycle
+#endif
+#ifdef LIMIT_CYCLE_T
+	const uint64_t target_cycle_time = 238; //ns, T-cycle
+#endif
+
+	uint64_t prev_cycle_time = 0;
 };
 

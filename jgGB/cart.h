@@ -4,13 +4,14 @@
 //forward declare
 class SST;
 class innercart;
+class bus;
 
 
 class cart
 {
 
 public:
-    cart();
+    cart(bus* b);
     ~cart();
 //    cart(char* cartfilename);
     bool cart_loaded();
@@ -41,6 +42,10 @@ public:
 
     void cart_battery_load();
     void cart_battery_save();
+    
+    void cart_tick();
+
+    bus* b;
 private:
     bool cartloaded = false;
 

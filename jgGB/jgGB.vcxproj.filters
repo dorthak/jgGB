@@ -69,6 +69,9 @@
     <ClInclude Include="iCartMBC1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="iCartMBC3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bus.cpp">
@@ -129,6 +132,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="iCartMBC1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="iCartMBC3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

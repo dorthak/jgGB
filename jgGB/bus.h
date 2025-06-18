@@ -10,6 +10,7 @@ class timer;
 class dbg;
 class ppu;
 class lcd;
+class emu;
 
 
 class bus
@@ -29,6 +30,7 @@ public:
 	void set_debug(dbg* d);
 	void set_ppu(ppu* p);
 	void set_lcd(lcd* l);
+	void set_emu(emu* e);
 
 	//bus passing messages between its members
 	uint8_t bus_get_cpu_int_flags();
@@ -53,6 +55,12 @@ public:
 	void bus_cart_battery_load();
 	void bus_cart_battery_save();
 
+	//RTC Commands
+	void bus_rtc_tick();
+	uint64_t bus_get_ticks();
+	uint64_t bus_get_ticks_ns();
+
+
 private:
 	cart* crt;
 	ram* r;
@@ -62,6 +70,7 @@ private:
 	dbg* d;
 	ppu* p;
 	lcd* l;
+	emu* e;
 
 
 	//DMA status
