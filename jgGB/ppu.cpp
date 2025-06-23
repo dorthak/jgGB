@@ -70,6 +70,13 @@ uint8_t ppu::ppu_oam_read(uint16_t address)
 
 void ppu::ppu_tick()
 {
+
+	//handle PPU Off bit
+	if (!l->lcdc_lcd_enable())
+	{
+		l->set_ly(0);
+		return;
+	}
 	line_ticks++;
 	switch (l->lcds_mode()) {
 		case lcd::MODE_OAM:

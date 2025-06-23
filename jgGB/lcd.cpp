@@ -97,11 +97,19 @@ void lcd::lcds_lyc_set(bool b)
 
 bool lcd::lcds_stat_int(stat_src src)
 {
+	if (!lcdc_lcd_enable())
+	{
+		return false;
+	}
 	return lcds & src;
 }
 
 uint8_t lcd::lcd_read(uint16_t address)
 {
+	if ((!lcdc_lcd_enable()) && (address == 0xFF41))
+	{
+		return 0;
+	}
 	uint8_t offset = (address - 0xFF40);
 	uint8_t* p = (uint8_t*)this;
 
