@@ -92,7 +92,7 @@ bool cpu::cpu_step() {
 #endif
 #ifdef DEBUG_TIMING
         uint64_t newClock = e->get_ticks();
-        printf("Opcode: %02X \t T-cycles: %02u\n", cur_opcode, newClock - lastClock);
+        printf("Opcode: %02X \t T-cycles: %02u\n", cur_opcode, (int)(newClock - lastClock));
         lastClock = newClock;
 #endif
 
