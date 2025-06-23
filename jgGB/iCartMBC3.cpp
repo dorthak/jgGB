@@ -259,7 +259,7 @@ void iCartMBC3::cart_write(uint16_t address, uint8_t value)
         {
             value = 1;
         }
-        value &= (rom_bank_max - 1);  //check that it's no more higher than actual number of banks on chip.
+        value &= (rom_bank_max - 1);  //check that it's no  higher than actual number of banks on chip.
 
         rom_bank_value = value;
         rom_bank_x = rom_data + (0x4000 * rom_bank_value);
@@ -383,8 +383,8 @@ uint64_t iCartMBC3::rtc_get_current_ms()
     //const std::chrono::time_point<std::chrono::system_clock> current = std::chrono::system_clock::now();
     //uint64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(current.time_since_epoch()).count();
     //uint64_t ms = SDL_GetTicks();
-    //uint64_t ms = this->c->b->bus_get_sys_ticks();
-    uint64_t ms = this->c->b->bus_get_emu_ticks();
+    uint64_t ms = this->c->b->bus_get_sys_ticks();
+    //uint64_t ms = this->c->b->bus_get_emu_ticks();
     //uint64_t ms = this->c->b->bus_get_ticks_ns();
     return ms;
 }
@@ -413,8 +413,8 @@ void iCartMBC3::cart_tick()
   
     //if ((currentTime - oldTime) >= (128.0 * 1000.0 * 25.087))
     //if ((currentTime - oldTime) >= (3211136))
-    if ((currentTime - oldTime) >= (4194304))
-    //if ((currentTime - oldTime) >= (1000))
+    //if ((currentTime - oldTime) >= (4194304))
+    if ((currentTime - oldTime) >= (1000))
         {
         //std::cout << "Cart Tick: " << currentTime << " oldTime: " << rtc_last_value;
         //std::cout << " s: " << (int)rtc_real_clock.RTC_S << " m: " << (int)rtc_real_clock.RTC_M;
