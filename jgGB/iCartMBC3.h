@@ -21,6 +21,8 @@ public:
     void cart_battery_load() override;
     void cart_battery_save() override;
 
+
+
     typedef struct {
         uint8_t RTC_S;
         uint8_t RTC_M;
@@ -69,6 +71,12 @@ private:
     uint8_t rtc_curr_reg;
     uint64_t rtc_last_value;
     bool rtc_stopped;
+    FILE* frtc;
+
+
+    void rtc_battery_init();
+    void rtc_battery_load();
+    void rtc_battery_save();
 
     void setDay(uint16_t day);
 

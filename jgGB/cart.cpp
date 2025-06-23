@@ -14,8 +14,9 @@ cart::cart(bus* b)
 
 cart::~cart()
 {
-    delete rom_data;
+    delete[] rom_data;
     delete filename;
+    delete ic;
 }
 
 bool cart::cart_load(char* cartfilename)

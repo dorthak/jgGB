@@ -23,6 +23,8 @@ iCartMBC3::iCartMBC3(cart* c, cart::rom_header* header, uint32_t rom_size, uint8
     {
         rtc = true;
         rtc_mode = false;
+        rtc_battery_load();
+        rtc_battery_init();
     }
     
     rtc_real_clock.RTC_S = 0;
@@ -57,6 +59,7 @@ iCartMBC3::iCartMBC3(cart* c, cart::rom_header* header, uint32_t rom_size, uint8
 iCartMBC3::~iCartMBC3()
 {
     fclose(fp);
+    fclose(frtc);
 
     for (int i = 0; i < 16; i++)
     {
@@ -161,11 +164,31 @@ void iCartMBC3::cart_battery_load()
             fread(ram_banks[i], 0x2000, 1, fp);
         }
     }
-
-    
     fclose(fp);
-
 }
+
+void iCartMBC3::rtc_battery_load()
+{
+    char fn[1048];
+    sprintf(fn, "%s.rtc", filename);
+        
+    errno_t err;
+    FILE* fp1;
+
+    err = fopen_s(&fp1, fn, "rb");
+
+    if (err)
+    {
+        std::cout << "Failed to open: " << fn << " for read" << std::endl;
+        return;
+    }
+
+    fread(&rtc_real_clock, sizeof(rtc_real_clock), 1, fp1);
+    rtc_latch_clock = rtc_real_clock;
+    
+    fclose(fp1);
+}
+
 
 void iCartMBC3::cart_battery_init()
 {
@@ -185,6 +208,24 @@ void iCartMBC3::cart_battery_init()
 
 }
 
+void iCartMBC3::rtc_battery_init()
+{
+    char fn[1048];
+    sprintf(fn, "%s.rtc", filename);
+
+    errno_t err;
+
+    err = fopen_s(&frtc, fn, "wb");
+
+    if (err)
+    {
+        std::cout << "Failed to open: " << fn << " for writing" << std::endl;
+        return;
+    }
+    std::cout << "Successfully opened: " << fn << " for writing" << std::endl;
+
+}
+
 void iCartMBC3::cart_battery_save()
 {
     rewind(fp);
@@ -196,6 +237,19 @@ void iCartMBC3::cart_battery_save()
         }
     }
 
+    if (rtc)
+    {
+        rtc_battery_save();
+    }
+
+}
+
+void iCartMBC3::rtc_battery_save()
+{
+    rewind(frtc);
+    
+    fwrite(&rtc_real_clock, sizeof(rtc_real_clock), 1, frtc);
+    
 }
 
 uint8_t iCartMBC3::cart_read(uint16_t address)
@@ -263,7 +317,7 @@ void iCartMBC3::cart_write(uint16_t address, uint8_t value)
 
         rom_bank_value = value;
         rom_bank_x = rom_data + (0x4000 * rom_bank_value);
-        std::cout << "Switching to ROM bank " << (int)rom_bank_value << std::endl;
+        //std::cout << "Switching to ROM bank " << (int)rom_bank_value << std::endl;
         return;
     }
 
@@ -279,7 +333,7 @@ void iCartMBC3::cart_write(uint16_t address, uint8_t value)
                 cart_battery_save();
             }
             ram_bank = ram_banks[ram_bank_value];
-            std::cout << "Switching to RAM bank " << (int)ram_bank_value << std::endl;
+            //std::cout << "Switching to RAM bank " << (int)ram_bank_value << std::endl;
             return;
         } 
         else if (value <= 0x0C)

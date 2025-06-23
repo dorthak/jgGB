@@ -8,7 +8,7 @@ class iCartMBC1 :
 {
 public:
     iCartMBC1(cart* c, cart::rom_header* header, uint32_t rom_size, uint8_t* rom_data, char* filename);
-    ~iCartMBC1();
+    ~iCartMBC1() override;
 
     uint8_t cart_read(uint16_t address) override;
     void cart_write(uint16_t address, uint8_t value) override;

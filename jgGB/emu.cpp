@@ -46,16 +46,16 @@ emu::emu()
 
 emu::~emu()
 {
-	delete(c);
-	delete(s);
-	delete(crt);
-	delete(b);
-	delete(p);
-	delete(d);
-	delete(t);
-	delete(i);
-	delete(u);
-	delete(r);
+	delete c;
+	delete s;
+	delete crt;
+	delete b;
+	delete p;
+	delete d;
+	delete t;
+	delete i;
+	delete u;
+	delete r;
 
 
 }
