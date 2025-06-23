@@ -31,8 +31,8 @@ void ui::ui_init()
 {
 	SDL_Init(SDL_INIT_VIDEO);
 	std::cout << "SDL INIT" << std::endl;
-	TTF_Init();
-	std::cout << "TTF INIT" << std::endl;
+	//TTF_Init();
+	//std::cout << "TTF INIT" << std::endl;
 
 	SDL_CreateWindowAndRenderer("jgGB", SCREEN_WIDTH, SCREEN_HEIGHT, 0, &sdlWindow, &sdlRenderer);
 
