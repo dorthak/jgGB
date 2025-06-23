@@ -58,22 +58,6 @@ bool cpu::cpu_step() {
             regs.Fr & (1 << 4) ? 'C' : '-'
         );
 
-#ifdef DEBUG_FILE_PRINT
-
-        fprintf(myfile, "%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
-            (unsigned long)e->get_ticks(),
-            pc, disassemble_string.c_str(), cur_opcode,
-            b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
-            regs.D, regs.E, regs.H, regs.L, regs.SP);
-#endif
-#ifdef DEBUG_SCREEN_PRINT
-
-        printf("%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
-            (unsigned long)e->get_ticks(),
-            pc, disassemble_string.c_str(), cur_opcode,
-            b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
-            regs.D, regs.E, regs.H, regs.L, regs.SP);
-#endif
 
         if (inst == NULL)
         {
@@ -89,6 +73,30 @@ bool cpu::cpu_step() {
         {
             return false;
         }
+
+#ifdef DEBUG_FILE_PRINT
+
+        fprintf(myfile, "%08lX - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
+            (unsigned long)e->get_ticks(),
+            pc, disassemble_string.c_str(), cur_opcode,
+            b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
+            regs.D, regs.E, regs.H, regs.L, regs.SP);
+#endif
+#ifdef DEBUG_SCREEN_PRINT
+
+        printf("%08lu - %04X: %-12s (%02X %02X %02X) A: %02X F: %s BC: %02X%02X DE: %02X%02X HL: %02X%02X SP: %04X\n",
+            (unsigned long)e->get_ticks(),
+            pc, disassemble_string.c_str(), cur_opcode,
+            b->bus_read(pc + 1), b->bus_read(pc + 2), regs.A, flags, regs.B, regs.C,
+            regs.D, regs.E, regs.H, regs.L, regs.SP);
+#endif
+#ifdef DEBUG_TIMING
+        uint64_t newClock = e->get_ticks();
+        printf("Opcode: %02X \t T-cycles: %02u\n", cur_opcode, newClock - lastClock);
+        lastClock = newClock;
+#endif
+
+
 
     } else {
         //is halted

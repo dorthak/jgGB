@@ -40,7 +40,15 @@ void cpu::fIN_LD()
         cpu_set_flags(0, 0, hflag, cflag);
         cpu_set_reg(reg_1, cpu_read_reg(reg_2) + (char)fetched_data);
 
+        e->emu_cycles(1);
+
         return;
+    }
+
+    if ((reg_1 == instdata::RT_SP) && (reg_2 == instdata::RT_HL))
+    {
+        // this is just for LD SP, HL, Opcode F9
+        e->emu_cycles(1);
     }
 
     cpu_set_reg(reg_1, fetched_data);
@@ -164,7 +172,10 @@ void cpu::goto_addr(uint16_t addr, bool pushpc)
         }
 
         regs.PC = addr;
-        e->emu_cycles(1);
+        if (!cur_opcode == 0xE9)
+        {
+            e->emu_cycles(1);
+        }
     }
 }
 
@@ -254,6 +265,7 @@ void cpu::fIN_ADD()
         z = 0;
         h = (cpu_read_reg(reg_1) & 0xF) + (fetched_data & 0xF) >= 0x10;
         c = (int)(cpu_read_reg(reg_1) & 0xFF) + (int)(fetched_data & 0xFF) >= 0x100;
+        e->emu_cycles(1);
     }
     cpu_set_reg(reg_1, val & 0xFFFF);
     cpu_set_flags(z, 0, h, c);

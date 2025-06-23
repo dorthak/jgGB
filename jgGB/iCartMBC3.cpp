@@ -13,6 +13,8 @@ iCartMBC3::iCartMBC3(cart* c, cart::rom_header* header, uint32_t rom_size, uint8
     {
         battery = true;
         cart_battery_load();
+        cart_battery_init();
+
     }
     need_save = false;
 
@@ -41,18 +43,21 @@ iCartMBC3::iCartMBC3(cart* c, cart::rom_header* header, uint32_t rom_size, uint8
     std::cout << "Start time: " << rtc_last_value << std::endl;
 
     ram_enabled = false;
-    ram_banking = false;
-    banking_mode = false;
+
     
     ram_bank_mask = (uint8_t) 0xb11;
     if ((header->ram_size == 0x05) || (header->rom_size == 0x07))  //MBC30
     {
         ram_bank_mask = (uint8_t)0xb111;
     }
+
+    rom_bank_max = rom_size / 0x3FFF;
 }
 
 iCartMBC3::~iCartMBC3()
 {
+    fclose(fp);
+
     for (int i = 0; i < 16; i++)
     {
         if (ram_banks[i] != 0)
@@ -145,33 +150,51 @@ void iCartMBC3::cart_battery_load()
 
     if (err)
     {
-        std::cout << "Failed to open: " << fn << std::endl;
+        std::cout << "Failed to open: " << fn << " for read" << std::endl;
         return;
     }
 
-    fread(ram_bank, 0x2000, 1, fp);
+    for (int i = 0; i < 16; i++)
+    {
+        if (ram_banks[i] != 0)
+        {
+            fread(ram_banks[i], 0x2000, 1, fp);
+        }
+    }
+
+    
     fclose(fp);
 
 }
 
-void iCartMBC3::cart_battery_save()
+void iCartMBC3::cart_battery_init()
 {
     char fn[1048];
     sprintf(fn, "%s.battery", filename);
 
     errno_t err;
-    FILE* fp;
 
     err = fopen_s(&fp, fn, "wb");
 
     if (err)
     {
-        std::cout << "Failed to open: " << fn << std::endl;
+        std::cout << "Failed to open: " <<  fn << " for writing" << std::endl;
         return;
     }
+    std::cout << "Successfully opened: " << fn << " for writing" << std::endl;
 
-    fwrite(ram_bank, 0x2000, 1, fp);
-    fclose(fp);
+}
+
+void iCartMBC3::cart_battery_save()
+{
+    rewind(fp);
+    for (int i = 0; i < 16; i++)
+    {
+        if (ram_banks[i] != 0)
+        {
+            fwrite(ram_banks[i], 0x2000, 1, fp);
+        }
+    }
 
 }
 
@@ -230,11 +253,14 @@ void iCartMBC3::cart_write(uint16_t address, uint8_t value)
     //ROM Bank Number register
     if ((address & 0xE000) == 0x2000) // 2000-3FFF
     {
+        value &= 0x7F; //max banks possible with MBC3
+
         if (value == 0)
         {
             value = 1;
         }
-        value &= 0x7F;
+        //value &= (rom_bank_max - 1);  //check that it's no more higher than actual number of banks on chip.
+
         rom_bank_value = value;
         rom_bank_x = rom_data + (0x4000 * rom_bank_value);
         return;
@@ -247,18 +273,22 @@ void iCartMBC3::cart_write(uint16_t address, uint8_t value)
         {
             rtc_mode = false;
             ram_bank_value = value & ram_bank_mask;
-            if (ram_banking)
+            if (cart_need_save())
             {
-                if (cart_need_save())
-                {
-                    cart_battery_save();
-                }
-                ram_bank = ram_banks[ram_bank_value];
+                cart_battery_save();
             }
+            ram_bank = ram_banks[ram_bank_value];
+            std::cout << "Switching to RAM bank " << (int)ram_bank_value << std::endl;
             return;
-        } else {  // accessing RTC registers
+        } 
+        else if (value <= 0x0C)
+        {  // accessing RTC registers
             rtc_mode = true;
             rtc_curr_reg = value;
+        }
+        else
+        {
+            std::cerr << "Invalid RAM/RTC register value: " << (int)value << std::endl;
         }
     }
 
@@ -352,7 +382,8 @@ uint64_t iCartMBC3::rtc_get_current_ms()
     //const std::chrono::time_point<std::chrono::system_clock> current = std::chrono::system_clock::now();
     //uint64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(current.time_since_epoch()).count();
     //uint64_t ms = SDL_GetTicks();
-    uint64_t ms = this->c->b->bus_get_ticks();
+    uint64_t ms = this->c->b->bus_get_sys_ticks();
+    //uint64_t ms = this->c->b->bus_get_emu_ticks();
     //uint64_t ms = this->c->b->bus_get_ticks_ns();
     return ms;
 }
@@ -379,8 +410,10 @@ void iCartMBC3::cart_tick()
     uint64_t currentTime = rtc_get_current_ms();
     uint64_t oldTime = rtc_last_value;
   
-    if ((currentTime - oldTime) >= 1000)
-    {
+    //if ((currentTime - oldTime) >= (128.0 * 1000.0 * 25.087))
+    //if ((currentTime - oldTime) >= (3211136))
+    if ((currentTime - oldTime) >= (1000))
+        {
         //std::cout << "Cart Tick: " << currentTime << " oldTime: " << rtc_last_value;
         //std::cout << " s: " << (int)rtc_real_clock.RTC_S << " m: " << (int)rtc_real_clock.RTC_M;
         //std::cout << " h: " << (int)rtc_real_clock.RTC_H << " dl: " << (int)rtc_real_clock.RTC_DL;

@@ -179,12 +179,13 @@ void iCartMBC1::cart_write(uint16_t address, uint8_t value)
     //ROM Bank Number register
     if ((address & 0xE000) == 0x2000)
     {
+        value &= 0b11111;
         if (value == 0)
         {
             value = 1;
         }
 
-        value &= 0b11111;
+        
 
         rom_bank_value = value;
         rom_bank_x = rom_data + (0x4000 * rom_bank_value);

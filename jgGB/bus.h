@@ -57,9 +57,9 @@ public:
 
 	//RTC Commands
 	void bus_rtc_tick();
-	uint64_t bus_get_ticks();
-	uint64_t bus_get_ticks_ns();
-
+	uint64_t bus_get_sys_ticks();
+	uint64_t bus_get_sys_ticks_ns();
+	uint64_t bus_get_emu_ticks();
 
 private:
 	cart* crt;

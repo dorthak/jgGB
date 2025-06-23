@@ -284,6 +284,11 @@ private:
 	friend class SST;
 
 	std::FILE * myfile;
+
+	//timing tests
+#ifdef DEBUG_TIMING
+	uint64_t lastClock = 0;
+#endif
 };
 
 

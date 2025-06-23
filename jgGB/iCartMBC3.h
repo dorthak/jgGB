@@ -44,10 +44,8 @@ private:
 
     //mbc3 data
     bool ram_enabled;
-    bool ram_banking;
 
     uint8_t* rom_bank_x;
-    uint8_t banking_mode;
 
     uint8_t rom_bank_value;
     uint8_t ram_bank_value;
@@ -56,10 +54,14 @@ private:
     uint8_t* ram_banks[16];
 
     uint8_t ram_bank_mask;
+    uint8_t rom_bank_max;
 
     //for battery
     bool battery;
     bool need_save;
+    FILE* fp;
+
+    void cart_battery_init();
 
     //for RTC
     bool rtc;

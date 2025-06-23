@@ -42,8 +42,55 @@ bool cart::cart_load(char* cartfilename)
 
         rewind(fp);
 
+        if (rom_size < 0x7FFF)
+        {
+            std::cerr << "Invalid size ROM - must be at least 32kb" << std::endl;
+            return false;
+        }
+        else if (rom_size <= 0x7FFF + 1)
+        {
+            rom_size = 0x7FFF + 1;
+        } 
+        else if (rom_size <= 0xFFFF + 1)
+        {
+            rom_size = 0xFFFF + 1; //64KiB
+        }
+        else if (rom_size <= 0x1FFFF + 1)
+        {
+            rom_size = 0x1FFFF + 1; //128KiB
+        }
+        else if (rom_size <= 0x3FFFF + 1)
+        {
+            rom_size = 0x3FFFF + 1; //256KiB
+        }
+        else if (rom_size <= 0x7FFFF + 1)
+        {
+            rom_size = 0x7FFFF + 1; //512KiB
+        }
+        else if (rom_size <= 0xFFFFF + 1)
+        {
+            rom_size = 0xFFFFF + 1; //1MiB
+        }
+        else if (rom_size <= 0x1FFFFF + 1)
+        {
+            rom_size = 0x1FFFFF + 1; //2MiB
+        }
+        else if (rom_size <= 0x3FFFFF + 1)
+        {
+            rom_size = 0x3FFFFF + 1; //4MiB
+        }
+        else if (rom_size <= 0x7FFFFF + 1)
+        {
+            rom_size = 0x7FFFFF + 1; //8MiB
+        }
+
+
+
         //rom_data = (uint8_t*)malloc(rom_size);
         rom_data = new uint8_t[rom_size];
+
+        memset(rom_data, 0xFF, rom_size - 1);
+
         fread(rom_data, rom_size, 1, fp);
         fclose(fp);
 

@@ -288,11 +288,17 @@ void bus::bus_rtc_tick()
 	crt->cart_tick();
 }
 
-uint64_t bus::bus_get_ticks()
+uint64_t bus::bus_get_sys_ticks()
 {
 	return e->get_sys_ticks();
 }
-uint64_t bus::bus_get_ticks_ns()
+uint64_t bus::bus_get_sys_ticks_ns()
 {
 	return e->get_sys_ticks_ns();
+}
+
+
+uint64_t bus::bus_get_emu_ticks()
+{
+	return e->get_ticks();
 }
