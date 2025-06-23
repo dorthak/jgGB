@@ -170,9 +170,9 @@ void cpu::goto_addr(uint16_t addr, bool pushpc)
             e->emu_cycles(2);
             s->stack_push16(regs.PC);
         }
-
+        
         regs.PC = addr;
-        if (!cur_opcode == 0xE9)
+        if (cur_opcode != 0xE9)
         {
             e->emu_cycles(1);
         }
@@ -189,6 +189,8 @@ void cpu::fIN_JR()
     char rel = (char)(fetched_data & 0xFF);
     uint16_t addr = regs.PC + rel;
     goto_addr(addr, false);
+    
+
 }
 
 void cpu::fIN_CALL()
