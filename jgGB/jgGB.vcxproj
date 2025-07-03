@@ -150,6 +150,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="aChannel2.h" />
+    <ClInclude Include="aChannelBase.h" />
+    <ClInclude Include="apu.h" />
     <ClInclude Include="bus.h" />
     <ClInclude Include="cart.h" />
     <ClInclude Include="common.h" />
@@ -171,7 +174,10 @@
     <ClInclude Include="ui.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="aChannel2.cpp" />
+    <ClCompile Include="aChannelBase.cpp" />
     <ClCompile Include="amodefunc.cpp" />
+    <ClCompile Include="apu.cpp" />
     <ClCompile Include="bus.cpp" />
     <ClCompile Include="cart.cpp" />
     <ClCompile Include="cpu.cpp" />

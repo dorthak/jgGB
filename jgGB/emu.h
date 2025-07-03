@@ -11,6 +11,7 @@
 #include "dbg.h"
 #include "ppu.h"
 #include "lcd.h"
+#include "apu.h"
 
 class cpu;
 
@@ -47,6 +48,7 @@ private:
 	dbg* d;
 	ppu* p;
 	lcd* l;
+	apu* a;
 	
 	bool die;
 	bool paused;

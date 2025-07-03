@@ -72,6 +72,15 @@
     <ClInclude Include="iCartMBC3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="apu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="aChannelBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="aChannel2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bus.cpp">
@@ -135,6 +144,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="iCartMBC3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="apu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="aChannelBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="aChannel2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

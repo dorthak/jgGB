@@ -11,6 +11,7 @@ class dbg;
 class ppu;
 class lcd;
 class emu;
+class apu;
 
 
 class bus
@@ -31,6 +32,7 @@ public:
 	void set_ppu(ppu* p);
 	void set_lcd(lcd* l);
 	void set_emu(emu* e);
+	void set_apu(apu* a);
 
 	//bus passing messages between its members
 	uint8_t bus_get_cpu_int_flags();
@@ -71,6 +73,7 @@ private:
 	ppu* p;
 	lcd* l;
 	emu* e;
+	apu* a;
 
 
 	//DMA status

@@ -6,6 +6,7 @@
 #include "dbg.h"
 #include "ppu.h"
 #include "lcd.h"
+#include "apu.h"
 
 #include <windows.h>
 // 0x0000 - 0x3FFF : ROM Bank 0
@@ -62,14 +63,18 @@ uint8_t bus::bus_read(uint16_t address)
 	} else if (address < 0xFF00) {
 		//reserved unsuable
 		return 0;
+	} else if (address < 0xFF10) {
+		//IO Registers...
+		return i->io_read(address);
+	} else if (address < 0xFF40) {
+		//APU Registers
+		return a->apu_read(address);
+	} else if (address < 0xFF4C) {
+		//LCD Registers
+		return l->lcd_read(address);
 	} else if (address < 0xFF80) {
 		//IO Registers...
-		if ((address >= 0xFF40) && (address <= 0xFF4B))
-		{
-			return l->lcd_read(address);
-		}
 		return i->io_read(address);
-		
 	} else if (address == 0xFFFF) {
 		//CPU ENABLE REGISTER
 		return c->cpu_get_ie_register();
@@ -119,15 +124,21 @@ void bus::bus_write(uint16_t address, uint8_t value)
 		p->ppu_oam_write(address, value);
 	} else if (address < 0xFF00) {
 		//reserved unsuable
-
-	} else if (address < 0xFF40) {
+	}
+	else if (address < 0xFF10) {
 		//IO Registers...
 		i->io_write(address, value);
-	} else if (address < 0xFF4C) {
+	}
+	else if (address < 0xFF40) {
+		//APU Registers
+		a->apu_write(address, value);
+	}
+	else if (address < 0xFF4C) {
 		//LCD Registers
 		l->lcd_write(address, value);
-	} else if (address < 0xFF80) {
-		//IO Registers
+	}
+	else if (address < 0xFF80) {
+		//IO Registers...
 		i->io_write(address, value);
 	} else if (address == 0xFFFF) {
 		//CPU ENABLE REGISTER
@@ -187,6 +198,10 @@ void bus::set_lcd(lcd* l)
 void bus::set_emu(emu* e)
 {
 	this->e = e;
+}
+void bus::set_apu(apu* a)
+{
+	this->a = a;
 }
 
 uint8_t bus::bus_get_cpu_int_flags()
