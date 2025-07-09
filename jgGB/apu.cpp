@@ -1,13 +1,16 @@
 #include "apu.h"
 #include "bus.h"
 #include "ui.h"
+#include "audioUI.h"
 #include "aChannelBase.h"
 #include "aChannel2.h"
 
-apu::apu(bus* b, ui* u)
+
+apu::apu(bus* b, ui* u, audioUI* aui)
 {
 	this->b = b;
 	this->u = u;
+	this->aui = aui;
 	
 	//init channels
 	for (int i = 0;i < 4;i++)
@@ -55,6 +58,9 @@ apu::apu(bus* b, ui* u)
 	reg_array[4][3] = &(regs.NR43);
 	reg_array[4][4] = &(regs.NR44);
 
+	div_apu = 0;
+	//prev_div = b->bus_read(0xFF04); //read timer's DIV value
+	prev_div = 0;
 
 }
 
@@ -111,4 +117,55 @@ uint8_t apu::get_reg(uint8_t channel, uint8_t value)
 	}
 	std::cerr << "Error: invalid audio register requested!" << std::endl;
 	return 0xff;
+}
+
+void apu::apu_tick()
+{
+	uint16_t div = b->bus_read(0xFF04); //read timer's DIV value
+	
+	// div_apu logic
+	if ((BIT(prev_div, 4) == 1) && (BIT(div, 4) == 0))
+	{
+		div_apu++;
+		
+		//TODO: Temporary
+		//int8_t outputSamples[16];
+		//for (int i = 0; i < 16; i++)
+		//{
+		//	outputSamples[i] = i;
+		//}
+		//aui->putAudio(outputSamples, 16);
+
+	} 
+
+	//period divider logic - every 4 ticks
+	if ((div % 4) == 0)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if (channels[i] != nullptr)
+			{
+				channels[i]->tickPeriodCounter();
+				if ((div % 16) == 0)
+				{
+					int sample = channels[i]->generateSample();
+					aui->putAudio(&sample, 1);
+				}
+				
+			}
+		}
+	}
+
+	////generate audio sample
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	if (channels[i] != nullptr)
+	//	{
+	//		int sample = channels[i]->generateSample();
+	//		aui->putAudio(&sample, 1);
+	//	}
+	//}
+
+	prev_div = div;
+
 }

@@ -25,11 +25,16 @@ emu::emu()
 	r = new ram();
 	i = new io(b);
 	u = new ui(this, i);
+
+
+
 	t = new timer(b);
 	d = new dbg(b);
 	l = new lcd(b);
 	p = new ppu(b, l, u);
-	a = new apu(b, u);
+	aui = new audioUI(u);
+	a = new apu(b, u, aui);
+
 
 
 	s->set_cpu(c);
@@ -43,6 +48,7 @@ emu::emu()
 	b->set_emu(this);
 	b->set_apu(a);
 	u->set_ppu(p);
+	u->set_audioUI(aui);
 }
 
 emu::~emu()
@@ -100,8 +106,8 @@ int emu::emu_cart_load(int argc, char** argv)
 
 int emu::emu_run()
 {
-	
 	u->ui_init();
+	aui->audioUIinit();
 
 	std::thread cpu_thread(&emu::run_cpu, this);
 	cpu_thread.detach();

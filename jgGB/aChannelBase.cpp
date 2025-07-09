@@ -10,3 +10,8 @@ aChannelBase::~aChannelBase()
 {
 
 }
+
+void aChannelBase::tickPeriodCounter()
+{
+	return;
+}

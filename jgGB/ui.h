@@ -1,13 +1,13 @@
 #pragma once
-#include "common.h"
-
 #include <SDL3/SDL.h>
-//#include <SDL3_ttf/SDL_ttf.h>
+
+#include "common.h"
 
 
 class emu;
 class ppu;
 class io;
+class audioUI;
 
 class ui
 {
@@ -21,6 +21,7 @@ public:
 	
 	void set_emu(emu* e);
 	void set_ppu(ppu* p);
+	void set_audioUI(audioUI* aui);
 
 	void delay(uint32_t ms);
 	void delay_ns(uint64_t ns);
@@ -32,6 +33,7 @@ private:
 	emu* em;
 	ppu* p;
 	io* i;
+	audioUI* a;
 
 	static const int SCREEN_WIDTH = 1024;
 	static const int SCREEN_HEIGHT = 768;

@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 	char* argvt[3];
 
 
-	int target = 25;  //set here
+	int target = 26;  //set here
 	switch (target)
 	{
 		case 0: argvt[1] = (char*)"E:\\prog\\gbasm\\gb_emu_test\\emu-test1.gb"; break;
@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 		case 23: argvt[1] = (char*)"E:\\prog\\gbasm\\gb_emu_test\\emu-test2.gb"; break;
 		case 24: argvt[1] = (char*)"E:\\prog\\jgGB\\roms\\exercise.gb"; break;
 		case 25: argvt[1] = (char*)"E:\\prog\\jgGB\\roms\\numism.gb"; break;
-
+		case 26: argvt[1] = (char*)"E:\\prog\\jgGB\\roms\\sound.gb"; break;
 	}
 
 

@@ -227,6 +227,7 @@ void bus::bus_timer_write(uint16_t address, uint8_t value)
 void bus::bus_timer_tick()
 {
 	t->timer_tick();
+	a->apu_tick();
 }
 
 void bus::bus_request_cpu_interrupt(instdata::interrupt_type t)

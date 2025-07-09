@@ -12,6 +12,7 @@
 #include "ppu.h"
 #include "lcd.h"
 #include "apu.h"
+#include "audioUI.h"
 
 class cpu;
 
@@ -49,6 +50,7 @@ private:
 	ppu* p;
 	lcd* l;
 	apu* a;
+	audioUI* aui;
 	
 	bool die;
 	bool paused;

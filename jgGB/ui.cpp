@@ -1,8 +1,9 @@
- #include "ui.h"
+#include "ui.h"
 #include "emu.h"
 #include "bus.h"
 #include "ppu.h"
 #include "io.h"
+#include "audioUI.h"
 
 ui::ui()
 {
@@ -25,11 +26,14 @@ void ui::set_ppu(ppu* p)
 {
 	this->p = p;
 }
-
+void ui::set_audioUI(audioUI* aui)
+{
+	this->a = aui;
+}
 
 void ui::ui_init()
 {
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 	std::cout << "SDL INIT" << std::endl;
 	//TTF_Init();
 	//std::cout << "TTF INIT" << std::endl;

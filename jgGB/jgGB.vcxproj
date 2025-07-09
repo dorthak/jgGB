@@ -153,6 +153,7 @@
     <ClInclude Include="aChannel2.h" />
     <ClInclude Include="aChannelBase.h" />
     <ClInclude Include="apu.h" />
+    <ClInclude Include="audioUI.h" />
     <ClInclude Include="bus.h" />
     <ClInclude Include="cart.h" />
     <ClInclude Include="common.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="aChannelBase.cpp" />
     <ClCompile Include="amodefunc.cpp" />
     <ClCompile Include="apu.cpp" />
+    <ClCompile Include="audioUI.cpp" />
     <ClCompile Include="bus.cpp" />
     <ClCompile Include="cart.cpp" />
     <ClCompile Include="cpu.cpp" />
