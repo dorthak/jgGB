@@ -7,13 +7,30 @@ class aChannelBase {
 public:
 	aChannelBase(apu* a);
 	~aChannelBase();
-	virtual void trigger_channel() = 0;
+	virtual void triggerChannel() = 0;
 	virtual void tickPeriodCounter();
 	virtual uint8_t generateSample() = 0;
+	virtual void lengthEnable();
+	virtual void lengthTick();
+	virtual void channelAPUOff();
+	virtual void envelopeSweepTick();
+
+	bool lengthEnabled;
+	uint8_t timerLength = 0;
+
+	bool envelopeEnabled;
+
+	bool channelEnabled;
+
 protected:
 	apu* a;
-	bool dacOn = false;
+
 	uint16_t periodCounter = 0;
 
+	uint8_t timerCurrentLength = 0;
+
+	bool dacOn();
+
+	uint8_t curVolume = 0;
 
 };

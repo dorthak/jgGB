@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 		case 24: argvt[1] = (char*)"E:\\prog\\jgGB\\roms\\exercise.gb"; break;
 		case 25: argvt[1] = (char*)"E:\\prog\\jgGB\\roms\\numism.gb"; break;
 		case 26: argvt[1] = (char*)"E:\\prog\\jgGB\\roms\\sound.gb"; break;
-	}
+	}	
 
 
 	

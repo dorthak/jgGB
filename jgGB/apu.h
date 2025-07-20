@@ -21,6 +21,14 @@ public:
 	void apu_tick();
 
 private:
+
+	void div_apu_tick();
+
+	void apu_on();
+	void apu_off();
+
+	bool apuOn;
+
 	uint16_t prev_div;
 	uint16_t div_apu;
 

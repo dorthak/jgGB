@@ -10,12 +10,12 @@ void audioUI::audioUIinit()
 {
 	SDL_AudioSpec inspec;
 	inspec.format = SDL_AUDIO_U8;
-	inspec.channels = 1;
+	inspec.channels = 2;
 	inspec.freq = AUDIOFREQ;
 
 	SDL_AudioSpec outspec;
 	outspec.format = SDL_AUDIO_U8;
-	outspec.channels = 1;
+	outspec.channels = 2;
 	outspec.freq = 48000;
 
 	mixstream = SDL_CreateAudioStream(&inspec, &outspec);
@@ -56,14 +56,16 @@ void audioUI::putAudio(const void* buf, int len)
 
 }
 
+
+
 void SDLCALL audioUI::OutStreamCallback(void* userdata, SDL_AudioStream* astream, int additional_amount, int total_amount)
 {
 	audioUI* aui = (audioUI*)userdata;
 
 	int addSamples = additional_amount / sizeof(uint8_t);
-	while (addSamples > 0)
-	{
-		uint8_t samples[64];
+	//while (addSamples > 0)
+	//{
+		uint8_t samples[480];
 		const int total = SDL_min(addSamples, SDL_arraysize(samples));
 
 		int receivedSamples = SDL_GetAudioStreamData(aui->mixstream, samples, total * sizeof(uint8_t));
@@ -74,10 +76,17 @@ void SDLCALL audioUI::OutStreamCallback(void* userdata, SDL_AudioStream* astream
 			return;
 		}
 
+		if (receivedSamples == 0)  //get some zeroes into the queue when first starting up
+		{
+			memset(samples, 0x80, sizeof(samples));
+		}
+		
+//		std::cout << "Samples requested: "<< addSamples << " Samples recieved: " << receivedSamples << std::endl;
+	
 		SDL_PutAudioStreamData(aui->outstream, samples, receivedSamples * sizeof(uint8_t));
 
-		addSamples -= receivedSamples * sizeof(uint8_t);
+		//addSamples -= receivedSamples * sizeof(uint8_t);
 
-	}
+	//}
 	
 }
