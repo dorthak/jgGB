@@ -216,9 +216,9 @@ void apu::apu_tick()
 	}
 
 	//generate audio sample
-	int sample[4];
-	int leftSample = 0;
-	int rightSample = 0;
+	int16_t sample[4];
+	int16_t leftSample = 0;
+	int16_t rightSample = 0;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -255,14 +255,14 @@ void apu::apu_tick()
 		leftSample = leftSample / 4;
 		rightSample = rightSample / 4;
 
-		uint8_t outSamples[2];
-		outSamples[0] = (uint8_t)leftSample;
-		outSamples[1] = (uint8_t)rightSample;
+		int8_t outSamples[2];
+		outSamples[0] = (int8_t)leftSample;
+		outSamples[1] = (int8_t)rightSample;
 
-		if ((leftSample != 0x80) && (rightSample != 0x80))
-		{
-			std::cout << "Non-zero sample" << std::endl;
-		}
+		//if (leftSample || rightSample)
+		//{
+		//	std::cout << "Non-zero sample" << std::endl;
+		//}
 
 
 

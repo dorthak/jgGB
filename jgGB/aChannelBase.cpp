@@ -49,3 +49,24 @@ void aChannelBase::envelopeSweepTick()
 {
 
 }
+
+int16_t aChannelBase::dac(uint8_t input, bool dac_on)  
+{
+	if (input > 0xF)
+	{
+		std::cerr << "Invalid digital audio value, should be between 0x0 and 0xF.  Recieved: " << input << std::endl;
+	}
+
+	int16_t value = input * 0x11;  //rescale from 0-F to 0-FF
+	value = value - (0xFF / 2); //shift center point down to 0 for signed value
+	if (dac_on)
+	{
+		lastDac = value;
+		return value;
+	}
+	else
+	{
+		lastDac = lastDac / 2;
+		return lastDac;
+	}
+}

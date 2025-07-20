@@ -81,12 +81,12 @@ void ppu::ppu_mode_hblank()
 
 			if (frame_time < target_frame_time)
 			{
-				u->delay((target_frame_time - frame_time));
+				u->delay((uint32_t)(target_frame_time - frame_time));
 			}
 
 			if (end - start_timer >= 1000)
 			{
-				uint32_t fps = frame_count;
+				uint32_t fps = (uint32_t) frame_count;
 				start_timer = end;
 				frame_count = 0;
 

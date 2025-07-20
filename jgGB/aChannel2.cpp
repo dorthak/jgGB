@@ -69,20 +69,15 @@ void aChannel2::tickPeriodCounter()
 	}
 }
 
-uint8_t aChannel2::generateSample()
+int16_t aChannel2::generateSample()
 {
+	uint8_t dutyCycle = ((a->get_reg(2, 1) & 0xC0) >> 6);
+	float sample = Wave[dutyCycle][dutyCounter];
+	float modifier = ((float)curVolume) / 16;
+	sample = sample * modifier;
+	sample = std::round(sample);
+	return dac(sample, (dacOn()) && (channelEnabled));
 
-	if ((dacOn()) && (channelEnabled))
-	{
-		uint8_t dutyCycle = ((a->get_reg(2, 1) & 0xC0) >> 6);
-		float sample = Wave[dutyCycle][dutyCounter];
-		float modifier = ((float)curVolume) / 16;
-		sample = sample * modifier;
-		sample = std::round(sample);
-		return (uint8_t) sample;
-	}
-	
-	return 0x80;
 }
 
 

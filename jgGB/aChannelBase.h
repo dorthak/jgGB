@@ -9,7 +9,7 @@ public:
 	~aChannelBase();
 	virtual void triggerChannel() = 0;
 	virtual void tickPeriodCounter();
-	virtual uint8_t generateSample() = 0;
+	virtual int16_t generateSample() = 0;
 	virtual void lengthEnable();
 	virtual void lengthTick();
 	virtual void channelAPUOff();
@@ -32,5 +32,9 @@ protected:
 	bool dacOn();
 
 	uint8_t curVolume = 0;
+
+	int16_t dac(uint8_t input, bool dac_on);
+
+	int16_t lastDac = 0;
 
 };
