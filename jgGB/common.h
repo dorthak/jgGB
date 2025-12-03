@@ -26,4 +26,6 @@
 #define NO_IMPL { fprintf(stderr, "NOT YET IMPLEMENTED\n"); exit(-5); };
 
 //#define AUDIOFREQ 48000
-#define AUDIOFREQ 1048576 / 4
+#define FREQDIV 1
+#define AUDIOFREQ (1048576 / FREQDIV);
+

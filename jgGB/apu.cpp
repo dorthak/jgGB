@@ -63,6 +63,11 @@ apu::apu(bus* b, ui* u, audioUI* aui)
 	prev_div = 0;
 
 	apuOn = false;
+
+	
+	double temp = 4194304.0 / (double)AUDIOFREQ;
+	hpfCapFactor = std::pow(0.99958, temp);
+	//hpfCapFactor = std::pow(0.999958, (4194304.0 / (double)( AUDIOFREQ )));
 }
 
 apu::~apu ()
@@ -226,7 +231,7 @@ void apu::apu_tick()
 
 	}
 
-	if ((div % 16) == 0)
+	if ((div % (4 * FREQDIV)) == 0)
 	{
 		
 		for (int i = 0; i < 4; i++)
@@ -255,32 +260,50 @@ void apu::apu_tick()
 		leftSample = leftSample / 4;
 		rightSample = rightSample / 4;
 
-		int8_t outSamples[2];
-		outSamples[0] = (int8_t)leftSample;
-		outSamples[1] = (int8_t)rightSample;
+		//volume
+		uint8_t leftVol = (regs.NR50 & 0b01110000) >> 4;
+		if (leftVol == 7)
+		{
+			leftVol = 8;
+		}
+		if (leftVol == 0)
+		{
+			leftVol = 1;
+		}
 
-		//if (leftSample || rightSample)
-		//{
-		//	std::cout << "Non-zero sample" << std::endl;
-		//}
+		uint8_t rightVol = (regs.NR50 & 0b111);
+		if (rightVol == 7)
+		{
+			rightVol = 8;
+		}
+		if (rightVol == 0)
+		{
+			rightVol = 1;
+		}
 
+		leftSample = leftSample * (leftVol / 8);
+		rightSample = rightSample * (rightVol / 8);
 
+		//High pass filter
+		bool dacs_enabled = false;
+		for (int i = 0; i < 4; i++)
+		{
+			if (channels[i] != nullptr)
+			{
+				dacs_enabled = channels[i]->dacOn();
 
-		aui->putAudio(outSamples, 2);
-		//uint8_t buff[2] = { 0xFF,0x80 };
-		//aui->putAudio(buff, 2);
+			}
+		}
+		leftSample = (int16_t)high_pass((double)leftSample, dacs_enabled);
+		rightSample = (int16_t)high_pass((double)rightSample, dacs_enabled);
+
+		//convert to signed 8bit values
+		int16_t outSamples[2];
+		outSamples[0] = leftSample;
+		outSamples[1] = rightSample;
+
+		aui->putAudio(outSamples, sizeof(outSamples));
 	}
-	
-
-	// 
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	if (channels[i] != nullptr)
-	//	{
-	//		int sample = channels[i]->generateSample();
-	//		aui->putAudio(&sample, 1);
-	//	}
-	//}
 
 	prev_div = div;
 
@@ -330,4 +353,17 @@ void apu::apu_off()
 	apuOn = false;
 	memset(&regs, 0, sizeof(regs));
 	channels[1]->channelAPUOff();
+}
+
+double apu::high_pass(double in, bool dacs_enabled)
+{
+	double out = 0.0;
+	if (dacs_enabled)
+	{
+		out = in - capacitor;
+
+		// capacitor slowly charges to 'in' via their difference
+		capacitor = in - out * hpfCapFactor; 
+	}
+	return out;
 }

@@ -64,7 +64,7 @@ int16_t aChannelBase::dac(uint8_t input, bool dac_on)
 		lastDac = value;
 		return value;
 	}
-	else
+	else  //TODO:  Very simplified decay
 	{
 		lastDac = lastDac / 2;
 		return lastDac;

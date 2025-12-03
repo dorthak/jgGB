@@ -9,12 +9,12 @@ audioUI::audioUI(ui* u)
 void audioUI::audioUIinit()
 {
 	SDL_AudioSpec inspec;
-	inspec.format = SDL_AUDIO_S8;
+	inspec.format = SDL_AUDIO_S16;
 	inspec.channels = 2;
 	inspec.freq = AUDIOFREQ;
 
 	SDL_AudioSpec outspec;
-	outspec.format = SDL_AUDIO_S8;
+	outspec.format = SDL_AUDIO_S16;
 	outspec.channels = 2;
 	outspec.freq = 48000;
 
@@ -62,12 +62,12 @@ void SDLCALL audioUI::OutStreamCallback(void* userdata, SDL_AudioStream* astream
 {
 	audioUI* aui = (audioUI*)userdata;
 
-	int addSamples = additional_amount / sizeof(uint8_t);
+	int addSamples = additional_amount / sizeof(int16_t);
 
-	uint8_t samples[480];
+	int16_t samples[480];
 	const int total = SDL_min(addSamples, SDL_arraysize(samples));
 
-	int receivedSamples = SDL_GetAudioStreamData(aui->mixstream, samples, total * sizeof(uint8_t));
+	int receivedSamples = SDL_GetAudioStreamData(aui->mixstream, samples, total * sizeof(int16_t));
 		
 	if (receivedSamples < 0)
 	{

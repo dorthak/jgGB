@@ -22,14 +22,14 @@ public:
 
 	bool channelEnabled;
 
+	bool dacOn();
+
 protected:
 	apu* a;
 
 	uint16_t periodCounter = 0;
 
 	uint8_t timerCurrentLength = 0;
-
-	bool dacOn();
 
 	uint8_t curVolume = 0;
 

@@ -68,6 +68,9 @@ private:
 
 	uint8_t* reg_array[5][5]; //channel, register
 
+	double hpfCapFactor;
+	double capacitor = 0.0;
 
+	double high_pass(double in, bool dacs_enabled);
 };
 

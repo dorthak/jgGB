@@ -73,10 +73,10 @@ int16_t aChannel2::generateSample()
 {
 	uint8_t dutyCycle = ((a->get_reg(2, 1) & 0xC0) >> 6);
 	float sample = Wave[dutyCycle][dutyCounter];
-	float modifier = ((float)curVolume) / 16;
+	float modifier = ((float)curVolume) / 16.0;
 	sample = sample * modifier;
 	sample = std::round(sample);
-	return dac(sample, (dacOn()) && (channelEnabled));
+	return dac((uint8_t)sample, (dacOn()) && (channelEnabled));
 
 }
 
